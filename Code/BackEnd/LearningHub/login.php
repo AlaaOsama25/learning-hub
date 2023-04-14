@@ -1,48 +1,57 @@
 <?php
-// Database connection
-session_start();
-require_once 'connect.php';
-$db = new connect();
-$conn = $db->connection();
 
-//check if user came from HTTP Post 
-if (isset($_POST['loginbtn'])) {
+class DatabaseConnection {
+	private $db;
 
-	$Username = $_POST['username'];
-	$password = $_POST['password'];
+	public function __construct() {
+		session_start();
+		require_once 'connect.php';
+		$this->db = new connect();
+	}
 
-	$stmt = $conn->prepare("SELECT * FROM users WHERE username = ? AND password = ? LIMIT 1");
-	$stmt->bind_param("ss", $Username, $password);
-	$execval = $stmt->execute();
+	public function getConnection() {
+		return $this->db->connection();
+	}
+}
 
+class login {
+	private $db;
 
-	if (!$execval) {
-		echo "Error: " . $stmt->error;
-	} else {
-		$result = $stmt->get_result();
-		if ($result->num_rows == 1) {
-			$row = $result->fetch_assoc();
-			// Set the username in the session
-			$_SESSION['username'] = $row['username'];
-			echo "Login successfully...";
-			header('Location: Home Page.php');
+	public function __construct(DatabaseConnection $db) {
+		$this->db = $db;
+	}
+
+	public function authenticateUser($username, $password) {
+		$conn = $this->db->getConnection();
+		$stmt = $conn->prepare("SELECT * FROM users WHERE username = ? AND password = ? LIMIT 1");
+		$stmt->bind_param("ss", $username, $password);
+		$execval = $stmt->execute();
+
+		if (!$execval) {
+			echo "Error: " . $stmt->error;
 		} else {
-			echo "Invalid username or password.";
+			$result = $stmt->get_result();
+			if ($result->num_rows == 1) {
+				$row = $result->fetch_assoc();
+				// Set the username in the session
+				$_SESSION['username'] = $row['username'];
+				echo "Login successfully...";
+				header('Location: Home Page.php');
+			} else {
+				echo "Invalid username or password.";
+			}
 		}
 	}
 }
-/*
-// Function to get user ID
-function getUserId($username, $password)
-{
-global $userID;
-$stmt = $userID->prepare("SELECT userID FROM users WHERE username = ? AND password = ? LIMIT 1");
-$stmt->bind_param("ss", $username, $password);
-$execval = $stmt->execute();
-printf($userID);
-}
-*/
 
+// Usage
+$database = new DatabaseConnection();
+$auth = new login($database);
+if (isset($_POST['loginbtn'])) {
+	$username = $_POST['username'];
+	$password = $_POST['password'];
+	$auth->authenticateUser($username, $password);
+}
 ?>
 
 <!DOCTYPE html>
