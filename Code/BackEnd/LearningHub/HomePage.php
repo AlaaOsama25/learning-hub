@@ -8,21 +8,12 @@ require_once 'connect.php';
 $db = new connect();
 $conn = $db->connection();
 
-// Check if the user is logged in
-if (!isset($_SESSION['username'])) {
-	// Redirect to the login page if not logged in
-	header('Location: LoginPage.php');
-	exit;
-}
-
-// Get the username from the session
-$username = $_SESSION['username'];
-
 if (!$conn) {
   echo "<script>alert('Connection failed: " . mysqli_connect_error() . "')</script>";
 }
 
 if (isset($_POST['addButton'])) {
+	
   //Code to handle form submission goes here
 
   $category = $_POST['hidden_category'];
@@ -34,7 +25,7 @@ if (isset($_POST['addButton'])) {
     $filename = uniqid() . '.txt';
 
     // Define the path where the text file will be saved
-    $path = 'C:\xampp\htdocs\LearningHub\articleContents\. . $filename;
+    $path = 'C:\xampp\htdocs\Articles' . $filename;
 
     // Save the content to the text file and check for errors
     $result = file_put_contents($path, $content);
@@ -66,6 +57,73 @@ if (isset($_POST['addButton'])) {
 
 }
 
+
+if(isset($_POST["uploadButton"])){
+	
+
+
+ $path = 'Videos/';
+
+$allowedExts = array("mp3", "mp4");
+$extension = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
+
+if (in_array($extension, $allowedExts))
+
+  {
+  if ($_FILES["file"]["error"] > 0)
+    {
+    echo "Return Code: " . $_FILES["file"]["error"] . "<br />";
+    }
+  else
+    {
+    echo "Upload: " . $_FILES["file"]["name"] . "<br />";
+    echo "Type: " . $_FILES["file"]["type"] . "<br />";
+    echo "Size: " . ($_FILES["file"]["size"] / 1024) . " Kb<br />";
+    echo "Temp file: " . $_FILES["file"]["tmp_name"] . "<br />";
+
+    if (file_exists("VideosImported/" . $_FILES["file"]["name"]))
+      {
+      echo $_FILES["file"]["name"] . " already exists. ";
+      }
+    else
+      {
+      move_uploaded_file($_FILES["file"]["tmp_name"],
+      "VideosImported/" . $_FILES["file"]["name"]);
+      echo "Stored in: " . "VideosImported/" . $_FILES["file"]["name"];
+	  $path = 'C:\xampp\htdocs\VideosImported' . $_FILES["file"]["name"];
+	  if($extension=="mp3")
+	  {
+	  $type="Record";}
+	  if($extension=="mp4")
+	  {
+	  $type="Video";}
+	  
+    $category = $_POST['hidden_category'];
+
+	 
+	  
+	   $sql = "INSERT INTO content (ContentPath, CategoryName, Type
+    ) VALUES (?, ?, ?)";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("sss", $path, $category, $type);
+
+    // Execute the SQL statement
+
+    if ($stmt->execute() === false) {
+      echo "Error: " . $stmt->error;
+      return;
+    }
+
+    echo "Record created successfully";
+	  
+      }
+    }
+  }
+else
+  {
+  echo "Invalid file";
+  }
+}
 ?>
 <!DOCTYPE html>
 
@@ -236,8 +294,8 @@ if (isset($_POST['addButton'])) {
         position: fixed;
         top: 50%;
         left: 50%;
-        width: 400px;
-        height: 140px;
+        width: 300px;
+        height: 100px;
         transform: translate(-50%, -50%);
         background-color: #fff;
         padding: 20px;
@@ -302,7 +360,6 @@ if (isset($_POST['addButton'])) {
     <div class="share" style="align-items:left">
 
         <div>
-            <h1>Hello <?php echo $username; ?></h1>
             <fieldset>
                 <legend></legend>
                 <h1></h1>
@@ -312,8 +369,8 @@ if (isset($_POST['addButton'])) {
                     <p>puplisher
                         &nbsp; &nbsp;&nbsp;
                         <select id="menu1" name="category" onchange="">
-                            <option value="" disabled selected>category</option>
-                            <option value="Languge">Languge</option>
+                            <option value="" disabled selected>category name</option>
+                            <option value="Language">Languge</option>
                             <option value="Mathematics">Mathematics</option>
                             <option value="Technology">Technology</option>
                         </select>
@@ -330,11 +387,12 @@ if (isset($_POST['addButton'])) {
                     <p></p>
                     <span class="close-button"
                         onclick="document.getElementById('popup2').style.display = 'none'">&times;</span>
-                    <form class="record" action="upload.php" method="POST" enctype="multipart/form-data">
-                        <label for="voice">Choose record:</label>
-                        <input type="file" id="voice" name="voice" accept="audio/*">
+                    <form class="record"action="<?php echo $_SERVER['PHP_SELF'] ?>" method="POST" enctype="multipart/form-data">
+                        <label for="file">Choose video or record:</label>
+                        <input type="file" id="file" name="file">
                         <br><br>
-                        <input type="submit" value="Upload">
+						<input type="hidden" name="hidden_category" id="hidden_category" value="">
+                        <input type="submit" value="Upload" name="uploadButton" >
                     </form>
                 </div>
                 <div id="popup3" class="popup">
@@ -356,6 +414,8 @@ if (isset($_POST['addButton'])) {
 
                 function showPopup2() {
                     document.getElementById("popup2").style.display = "block";
+					var category = document.getElementById("menu1").value;
+                    document.getElementById("hidden_category").value = category;
                 }
 
                 function showPopup3() {

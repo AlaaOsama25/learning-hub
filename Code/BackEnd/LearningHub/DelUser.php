@@ -1,9 +1,33 @@
+<?php
+// Database connection
+session_start();
+require_once 'connect.php';
+$db = new connect();
+$conn = $db->connection();
+
+
+//check if user came from HTTP Post 
+if (isset($_POST['deleteBtn'])) {
+
+
+	$Username = $_POST['username'];
+	$email = $_POST['email'];
+	
+
+	$stmt = $conn->prepare("DELETE  FROM users WHERE username = ? AND email = ? ");
+	$stmt->bind_param("ss", $Username, $email);
+	$execval = $stmt->execute();
+	echo "User deleted successfully...";
+
+}
+
+?>
 <!DOCTYPE html>
 
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Add User</title>
+  <title>Delete User </title>
   <style>
   /* CSS for the toolbar */
     .toolbar {
@@ -128,7 +152,7 @@
 </head>
 <body>
   <div class="toolbar">
-    <div class="toolbar__logo"> <a href="Home Page.html">Learning HUB</a></div>
+   <div class="toolbar__logo"> <a href="Home Page.html">Learning HUB</a></div>
     <div class="toolbar__menu">
       <div class="toolbar__menu-item"><a href="Languge.html">Languge</a></div>
       <div class="toolbar__menu-item"><a href="Mathematics.html">Mathematics</a></div>
@@ -164,19 +188,9 @@
 				<label for="email">Email:</label>
 				<input type="email" id="email" name="email" required>
 
-				<label for="password">Password:</label>
-				<input type="password" id="password" name="password" required>
+				
 
-				<label for="confirm_password">Confirm Password:</label>
-				<input type="password" id="confirm_password" name="confirm_password" required>
-				<label for="Role">Role:
-				 <input type="radio" name="my-radio" value="Admin"> Admin
-				 <input type="radio" name="my-radio" value="User"> User
-				 </label>
-				 <br>
-   
-
-				<input type="submit" value="Add">
+				<input type="submit" name="deleteBtn" value="Delete">
 			</form>
 		</div>
 	</div>
