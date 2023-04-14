@@ -1,24 +1,48 @@
 <?php
-// Database connection
-session_start();
-require_once 'connect.php';
-$db = new connect();
-$conn = $db->connection();
+class DatabaseConnection {
+	private $db;
 
+	public function __construct() {
+		session_start();
+		require_once 'connect.php';
+		$this->db = new connect();
+	}
 
-//check if user came from HTTP Post 
+	public function getConnection() {
+		return $this->db->connection();
+	}
+}
+
+class UserRegistration {
+	private $db;
+
+	public function __construct(DatabaseConnection $db) {
+		$this->db = $db;
+	}
+	
+public function registerUser($username, $email, $password, $role) {
+	$conn = $this->db->getConnection();
+	$stmt = $conn->prepare("INSERT INTO `users` (`username`, `password`, `email`, `role`) values(?, ?, ?, ?)");
+	$stmt->bind_param("ssss", $username, $password, $email, $role);
+	$execval = $stmt->execute();
+	if (!$execval) {
+		echo "Error: " . $stmt->error;
+	} else {
+		echo "Registration successfully...";
+	}
+}
+}
+// Usage
+$database = new DatabaseConnection();
+$register = new UserRegistration($database);
+
 if (isset($_POST['signup'])) {
-
-	$Username = $_POST['username'];
+	$username = $_POST['username'];
 	$email = $_POST['email'];
 	$password = $_POST['password'];
 	$role = 'User';
 
-	$stmt = $conn->prepare("INSERT INTO `users` (`username`, `password`, `email`, `role`) values(?, ?, ?, ?)");
-	$stmt->bind_param("ssss", $Username, $password, $email, $role);
-	$execval = $stmt->execute();
-	echo "Registration successfully...";
-
+	$register->registerUser($username, $email, $password, $role);
 }
 
 ?>
@@ -109,6 +133,18 @@ if (isset($_POST['signup'])) {
         margin-bottom: 20px;
     }
     </style>
+
+    <script>
+    function onChange() {
+        const password = document.querySelector('input[name=password]');
+        const confirm = document.querySelector('input[name=confirm_password]');
+        if (confirm_password.value === password.value) {
+            confirm_password.setCustomValidity('');
+        } else {
+            confirm_password.setCustomValidity('Passwords do not match');
+        }
+    }
+    </script>
 </head>
 
 <body>
@@ -129,9 +165,8 @@ if (isset($_POST['signup'])) {
                 <input type="password" id="password" name="password" required>
 
                 <label for="confirm_password">Confirm Password:</label>
-                <input type="password" id="confirm_password" name="confirm_password" required>
-
-                <input type="submit" value="Register" name="signup">
+                <input type="password" id="confirm_password" name="confirm_password" onChange="onChange()" required>
+                <input type="submit" value="Register" name="signup" onChange="onChange()">
             </form>
         </div>
     </div>
