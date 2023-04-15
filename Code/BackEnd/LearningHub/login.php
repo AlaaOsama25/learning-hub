@@ -36,7 +36,7 @@ class login {
 				// Set the username in the session
 				$_SESSION['username'] = $row['username'];
 				echo "Login successfully...";
-				header('Location: Home Page.php');
+				header('Location: HomePage.php');
 			} else {
 				echo "Invalid username or password.";
 			}
@@ -167,7 +167,7 @@ if (isset($_POST['loginbtn'])) {
                 <label for="password">Password:</label>
                 <input type="password" id="password" name="password" required>
                 <input type="submit" value="Login" name="loginbtn"
-                    onclick="window.location.href='Home Page.html'"></button>
+                    ></button>
 
             </form>
             <div class="signup-link">
