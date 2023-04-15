@@ -15,6 +15,8 @@ class DatabaseConnection {
 
 class UserRegistration {
 	private $db;
+	
+ 
 
 	public function __construct(DatabaseConnection $db) {
 		$this->db = $db;
@@ -22,14 +24,31 @@ class UserRegistration {
 	
 public function registerUser($username, $email, $password, $role) {
 	$conn = $this->db->getConnection();
-	$stmt = $conn->prepare("INSERT INTO `users` (`username`, `password`, `email`, `role`) values(?, ?, ?, ?)");
-	$stmt->bind_param("ssss", $username, $password, $email, $role);
-	$execval = $stmt->execute();
+	
+	$stmt =$conn->prepare("SELECT * FROM users WHERE username = ?");
+    $stmt->bind_param("s", $username);
+    $stmt->execute();
+    $result = $stmt->get_result();
+if ($result->num_rows > 0) {
+  // Username already exists, display alert
+  echo "<script>alert('Username is already taken. Please choose a different username.');</script>";
+  echo "<script>clearTextField();</script>";
+  
+} else {
+  // Username is available, insert new user
+  $stmt = $conn->prepare("INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)");
+  $stmt->bind_param("ssss", $username, $email, $password, $role);
+ $execval= $stmt->execute();
+  
+	
 	if (!$execval) {
 		echo "Error: " . $stmt->error;
 	} else {
 		echo "Registration successfully...";
 	}
+  // Display success message or redirect to another page
+}
+	
 }
 }
 // Usage
@@ -133,6 +152,7 @@ if (isset($_POST['signup'])) {
         margin-bottom: 20px;
     }
     </style>
+	
 
     <script>
     function onChange() {
@@ -143,6 +163,55 @@ if (isset($_POST['signup'])) {
         } else {
             confirm_password.setCustomValidity('Passwords do not match');
         }
+    }
+	 function validateTextField(inputText) {
+  var regex = /^[a-zA-Z]+$/;
+  return regex.test(inputText);
+}
+	function validateInput() {
+  var inputText = document.getElementById("username").value;
+  if (!validateTextField(inputText)) {
+    alert("the data entered are not valid. Please enter only letters");
+	document.getElementById("username").value = "";
+	
+  }
+}
+
+function validateInput2() {
+  var inputText2 = document.getElementById("password").value;
+  if (!validateTextField2(inputText2)) {
+    alert("Input is invalid. Please enter at least 5 characters, one numeric value, and one special character.");
+	document.getElementById("password").value = "";
+    return false;
+  }
+  return true;
+}
+
+function validateTextField2(inputText2) {
+  // Check if input has at least 5 characters
+   if (inputText2.length < 5) {
+	  
+    return false;
+  }
+
+  // Check if input has at least one digit
+  if (!/\d/.test(inputText2)) {
+	 
+    return false;
+  }
+
+  // Check if input has at least one special character
+  if (!/[!@#$%^&*(),.?":{}|<>]/.test(inputText2)) {
+	  
+    return false;
+  }
+
+  // Input is valid
+  return true;
+}
+  function clearTextField() {
+      document.getElementById("username").value = "";
+	  	  
     }
     </script>
 </head>
@@ -156,17 +225,17 @@ if (isset($_POST['signup'])) {
         <div class="right-side">
             <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post">
                 <label for="username">Username:</label>
-                <input type="text" id="username" name="username" required>
+                <input type="text" id="username" name="username" onblur="validateInput()" required>
 
                 <label for="email">Email:</label>
                 <input type="email" id="email" name="email" required>
 
                 <label for="password">Password:</label>
-                <input type="password" id="password" name="password" required>
+                <input type="password" id="password" name="password" onblur="validateInput2()"  required>
 
                 <label for="confirm_password">Confirm Password:</label>
                 <input type="password" id="confirm_password" name="confirm_password" onChange="onChange()" required>
-                <input type="submit" value="Register" name="signup" onChange="onChange()">
+                <input type="submit" value="Register" name="signup"  onChange="onChange()">
             </form>
         </div>
     </div>
