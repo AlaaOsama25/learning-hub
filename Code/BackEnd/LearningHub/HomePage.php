@@ -125,6 +125,26 @@ else
   }
 }
 
+
+$sql = "SELECT * FROM followedcategories";
+$result = mysqli_query($conn, $sql);
+
+// Create an array to store the content
+$content = array();
+
+// Check if any rows were returned
+if (mysqli_num_rows($result) > 0) {
+    // Loop through each row and add it to the content array
+    while ($row = mysqli_fetch_assoc($result)) {
+        $content[] = $row['categoryname'];
+    }
+}
+
+// Store the content array in the session
+$_SESSION['content'] = $content;
+
+
+
 ?>
 <!DOCTYPE html>
 

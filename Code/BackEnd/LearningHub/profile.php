@@ -13,7 +13,6 @@ if (!$conn) {
   echo "<script>alert('Connection failed: " . mysqli_connect_error() . "')</script>";
 }
 
-
 ?>
 
 <!DOCTYPE html>
@@ -150,7 +149,11 @@ if (!$conn) {
       </div>
       
       <div class="profile__info-item">
-        <span class="profile__info-label">Followed Cateogries:</span> Language, Technology
+        <span class="profile__info-label">Followed Cateogries:</span>
+         <?php foreach ($_SESSION['content'] as $index => $value) 
+          echo  "$value, "  ; 
+        ?>
+        
       </div>
 
     </div>
