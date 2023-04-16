@@ -195,6 +195,48 @@
             margin-bottom: 10px;
 			margin: 0 auto;
 		}
+		
+		
+	#unfollow-button {
+        display: none;
+    }
+
+    #follow-button.followed {
+        display: none;
+    }
+
+    #unfollow-button.followed {
+        display: inline-block;
+    }
+
+    #follow-button,
+    #unfollow-button {
+        
+		background-color: #4CAF50;
+			color: #fff;
+			padding: 10px 20px;
+			border: none;
+			border-radius: 3px;
+			cursor: pointer;
+			font-size: 16px;
+			font-weight: bold;
+        color: white;
+    }
+
+    #unfollow-button {
+        background-color: grey;
+		
+    }
+
+    #unfollow-button::after {
+        content: "";
+    }
+
+    #unfollow-button.followed::after {
+        content: "";
+    }	
+		
+		
   </style>
   <script>
     // JavaScript to show/hide the overlay
@@ -232,11 +274,54 @@
 	  <div class="toolbar__menu-item"><a href="login.html">Log out</a></div>
     </div>
   </div>
+  
+  
+
+  
+  
   <div class="container">
   		<div class="center">
 			 <img src="image.jpg" alt="Login Image">
-					 </div>
-					 </div>
+	</div>
+</div>
+					 
+					 
+					 
+	  
+  
+  
+  
+  <div class="container2">
+<div >
+<h1>Technology </h1> 
+<button id="follow-button" onclick="followUser()">Follow</button>
+<button id="unfollow-button" onclick="unfollowUser()" style="display:none">Unfollow</button>
+
+<script>
+  function followUser() {
+    // Add follow logic here...
+    document.getElementById("follow-button").style.display = "none";
+    document.getElementById("unfollow-button").style.display = "block";
+  }
+
+  function unfollowUser() {
+    // Add unfollow logic here...
+    document.getElementById("follow-button").style.display = "block";
+    document.getElementById("unfollow-button").style.display = "none";
+  }
+</script>
+
+
+
+
+
+</div>
+</div>
+  				 				 					 					 
+
+
+
+	
 	<div class="share" style ="align-items:left"> 
 	
 	<div>
@@ -297,16 +382,14 @@
         document.getElementById("popup3").style.display = "block";
       }
 	 
+		
     </script>
 	</fieldset>
 	 </div>
 	
 </div>	
-  <div class="container2">
-<div style="float: left;">
-	<button class="follow-button">Followed</button>
-</div>
-</div>
+  
+  
   <div class="container">
 
 		<div class="Publicher "><h1>Hasnaa Ahmed </h1>
