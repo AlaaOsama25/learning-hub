@@ -16,7 +16,7 @@ if (isset($_POST['addButton'])) {
 	
   //Code to handle form submission goes here
 
-  $category = $_POST['hidden_category'];
+  $category = $_POST['hidden_category2'];
   $content = $_POST['textarea'];
 
   if (!empty($content)) {
@@ -403,7 +403,7 @@ else
                     <label for="textarea">Enter your message:</label><br><br>
                     <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post">
                         <textarea id="textarea" name="textarea" rows="4" cols="50"></textarea><br>
-                        <input type="hidden" name="hidden_category" id="hidden_category" value="">
+                        <input type="hidden" name="hidden_category2" id="hidden_category2" value="">
                         <input type="submit" value="add" name="addButton">
                 </div>
                 </form>
@@ -422,7 +422,7 @@ else
                 function showPopup3() {
                     document.getElementById("popup3").style.display = "block";
                     var category = document.getElementById("menu1").value;
-                    document.getElementById("hidden_category").value = category;
+                    document.getElementById("hidden_category2").value = category;
                 }
                 </script>
             </fieldset>
