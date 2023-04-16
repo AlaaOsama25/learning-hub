@@ -1,3 +1,21 @@
+<?php
+$condition=true;
+// Database connection
+if (empty(session_id()) && !headers_sent()) {
+  session_start();
+}
+
+require_once 'connect.php';
+$db = new connect();
+$conn = $db->connection();
+
+if (!$conn) {
+  echo "<script>alert('Connection failed: " . mysqli_connect_error() . "')</script>";
+}
+
+
+?>
+
 <!DOCTYPE html>
 
 <html>
@@ -91,6 +109,8 @@
     text-decoration: none;
     color: black;
   }
+  
+
 	
   </style>
 
@@ -118,19 +138,41 @@
     </div>
   </div>
   <div class="profile">
+    <br/><br/>
     <img class="profile__image" src="https://via.placeholder.com/200" alt="Profile Image">
+
 	<input type="submit" value="Edit Profle picture">
-    <h1 class="profile__name">John Doe</h1>
+    <h1 class="profile__name"> <?php echo $_SESSION['username'] ; ?> (<?php echo $_SESSION['role'];?> )</h1>
 	
     <div class="profile__info">
       <div class="profile__info-item">
-        <span class="profile__info-label">Email:</span> john.doe@example.com
+        <span class="profile__info-label">Email:</span> <?php echo $_SESSION['email']; ?>
       </div>
       
       <div class="profile__info-item">
         <span class="profile__info-label">Followed Cateogries:</span> Language, Technology
       </div>
+
     </div>
+    <br/><br/>
+    <div style="display: inline-block;">
+  <input id="addButton" type="submit" onclick="location.href='AddUser.php'" value="Add user">
+  <input id="deleteButton" type="submit" onclick="location.href='DelUser.php'" value="Delete user">
+</div>
+
+    <script>
+  var condition = <?php echo $_SESSION['role']=='Admin'? 'false' : 'true'; ?>;
+  var addbutton = document.getElementById("addButton");
+  var deletebutton = document.getElementById("deleteButton");
+
+
+  if (condition) {
+    addbutton.style.visibility = "hidden";
+    deletebutton.style.visibility = "hidden";
+
+  }
+</script>
+
   </div>
 </body>
 </html>

@@ -124,6 +124,7 @@ else
   echo "Invalid file";
   }
 }
+
 ?>
 <!DOCTYPE html>
 
@@ -232,7 +233,7 @@ else
         display: flex;
         flex-wrap: wrap;
         align-items: center;
-        justify-content: center;
+        justify-content: flex-start;
         border: 1px solid #ccc;
         padding: 10px;
         margin-bottom: 10px;
@@ -345,11 +346,11 @@ else
             <select id="menu" onchange="window.location.href=this.value;">
                 <option value=""></option>
                 <option value="notification.html">notification</option>
-                <option value="profile.html">profile</option>
+                <option value="profile.php">profile</option>
 
             </select>
         </div>
-        <div class="toolbar__menu-item"><a href="login.html">Log out</a></div>
+        <div class="toolbar__menu-item"><a href="login.php">Log out</a></div>
     </div>
     </div>
     <div class="container">
@@ -370,7 +371,7 @@ else
                         &nbsp; &nbsp;&nbsp;
                         <select id="menu1" name="category" onchange="">
                             <option value="" disabled selected>category name</option>
-                            <option value="Language">Languge</option>
+                            <option value="Language">Language</option>
                             <option value="Mathematics">Mathematics</option>
                             <option value="Technology">Technology</option>
                         </select>
@@ -428,28 +429,33 @@ else
         </div>
 
     </div>
+    <div>
+        <?php
+        
+$sql = "SELECT * FROM content";
+$result = mysqli_query($conn, $sql);
 
-    <div class="container">
+// check if any rows returned
+if (mysqli_num_rows($result) > 0) {
+    // output data of each row
+    while($row = mysqli_fetch_assoc($result)) {
+        // use $row data to generate HTML code
+        echo '<div class="container">';
+        echo '<div class="Publicher">';
+        echo '<h1>'.$row['CategoryName'].'</h1>';
+        echo '<h3>'.$row['ContentPath'].'</h3>';
+        echo '<p>'.$row['Type'].'</p>';
+        echo '</div>';
+        echo '</div>';
+    }
+} else {
+    echo "0 results";
+}
+?>
 
-        <div class="Publicher ">
-            <h1>Hasnaa Ahmed </h1>
-            <h3> Languge </h3>
 
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed auctor tristique lorem, vel sagittis elit.
-                Nulla facilisi. Fusce sit amet dolor at augue ullamcorper auctor. Praesent varius luctus ex, ac rutrum
-                turpis suscipit sit amet. Sed vel tellus eu massa molestie malesuada. Aenean vehicula, lorem sit amet
-                pharetra aliquam, velit velit elementum lectus, ut tempus turpis sem vel enim. Praesent vel magna quam.
-                Aliquam erat volutpat. Mauris lobortis arcu vel pellentesque pulvinar. Ut sed diam ac sapien feugiat
-                consectetur.</p>
-        </div>
-    </div>
-    <div class="container">
-        <div class="Publicher ">
-            <h1>Nada Mandour </h1>
-            <h3> technology </h3>
-            <img class="images" src="technology.jpg" alt="technology Image">
-        </div>
-    </div>
+        
+</div>
 
 
 

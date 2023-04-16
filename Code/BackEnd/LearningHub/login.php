@@ -35,6 +35,10 @@ class login {
 				$row = $result->fetch_assoc();
 				// Set the username in the session
 				$_SESSION['username'] = $row['username'];
+                $_SESSION['email'] = $row['email'];
+                $_SESSION['role'] = $row['role'];
+
+
 				echo "Login successfully...";
 				header('Location: HomePage.php');
 			} else {
@@ -171,7 +175,7 @@ if (isset($_POST['loginbtn'])) {
 
             </form>
             <div class="signup-link">
-                Don't have an account? <a href="signup.html">Sign up</a>
+                Don't have an account? <a href="signup.php">Sign up</a>
             </div>
         </div>
     </div>

@@ -211,7 +211,7 @@ if (isset($_POST['deleteBtn'])) {
     <div class="profile">
         <img class="profile__image" src="https://via.placeholder.com/200" alt="Profile Image">
         <input type="submit" value="Edit Profle picture">
-        <h1 class="profile__name">John Doe</h1>
+        <h1 class="profile__name"><?php echo $_SESSION['username'] ; ?> (<?php echo $_SESSION['role'];?> )</h1>
 
         <h1>Add User Information</h1>
         <div class="container">
