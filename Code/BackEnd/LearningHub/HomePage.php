@@ -1,151 +1,236 @@
 <?php
-// Database connection
-if (empty(session_id()) && !headers_sent()) {
-  session_start();
-}
+class DatabaseConnection
+{
+    private $db;
 
-require_once 'connect.php';
-$db = new connect();
-$conn = $db->connection();
-
-if (!$conn) {
-  echo "<script>alert('Connection failed: " . mysqli_connect_error() . "')</script>";
-}
-
-if (isset($_POST['addButton'])) {
-	
-  //Code to handle form submission goes here
-
-  $category = $_POST['hidden_category2'];
-  $content = $_POST['textarea'];
-
-  if (!empty($content)) {
-
-    // Generate a unique filename for the text file
-    $filename = uniqid() . '.txt';
-
-    // Define the path where the text file will be saved
-    $path = 'C:\xampp\htdocs\Articles' . $filename;
-
-    // Save the content to the text file and check for errors
-    $result = file_put_contents($path, $content);
-    if ($result === false) {
-      echo "Error: Could not save file";
-      return;
-
-    }
-
-    // Prepare the SQL statement to insert the file path into the database
-    $sql = "INSERT INTO content (ContentPath, CategoryName
-    ) VALUES (?, ?)";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ss", $path, $category);
-
-    // Execute the SQL statement
-
-    if ($stmt->execute() === false) {
-      echo "Error: " . $stmt->error;
-      return;
-    }
-
-    echo "Record created successfully";
-
-  } else {
-    echo "Error: Content is empty";
-    exit;
-  }
-
-}
-
-
-if(isset($_POST["uploadButton"])){
-	
-
-
- $path = 'Videos/';
-
-$allowedExts = array("mp3", "mp4");
-$extension = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
-
-if (in_array($extension, $allowedExts))
-
-  {
-  if ($_FILES["file"]["error"] > 0)
+    public function __construct()
     {
-    echo "Return Code: " . $_FILES["file"]["error"] . "<br />";
+        if (empty(session_id()) && !headers_sent()) {
+            session_start();
+        }
+        require_once 'connect.php';
+        $this->db = new connect();
     }
-  else
+
+    public function getConnection()
     {
-    echo "Upload: " . $_FILES["file"]["name"] . "<br />";
-    echo "Type: " . $_FILES["file"]["type"] . "<br />";
-    echo "Size: " . ($_FILES["file"]["size"] / 1024) . " Kb<br />";
-    echo "Temp file: " . $_FILES["file"]["tmp_name"] . "<br />";
+        $conn = $this->db->connection();
+        if (!$conn) {
+            echo "<script>alert('Connection failed: " . mysqli_connect_error() . "')</script>";
+        }
 
-    if (file_exists("VideosImported/" . $_FILES["file"]["name"]))
-      {
-      echo $_FILES["file"]["name"] . " already exists. ";
-      }
-    else
-      {
-      move_uploaded_file($_FILES["file"]["tmp_name"],
-      "VideosImported/" . $_FILES["file"]["name"]);
-      echo "Stored in: " . "VideosImported/" . $_FILES["file"]["name"];
-	  $path = 'C:\xampp\htdocs\VideosImported' . $_FILES["file"]["name"];
-	  if($extension=="mp3")
-	  {
-	  $type="Record";}
-	  if($extension=="mp4")
-	  {
-	  $type="Video";}
-	  
-    $category = $_POST['hidden_category'];
-
-	 
-	  
-	   $sql = "INSERT INTO content (ContentPath, CategoryName, Type
-    ) VALUES (?, ?, ?)";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("sss", $path, $category, $type);
-
-    // Execute the SQL statement
-
-    if ($stmt->execute() === false) {
-      echo "Error: " . $stmt->error;
-      return;
-    }
-
-    echo "Record created successfully";
-	  
-      }
-    }
-  }
-else
-  {
-  echo "Invalid file";
-  }
-}
-
-
-$sql = "SELECT * FROM followedcategories";
-$result = mysqli_query($conn, $sql);
-
-// Create an array to store the content
-$content = array();
-
-// Check if any rows were returned
-if (mysqli_num_rows($result) > 0) {
-    // Loop through each row and add it to the content array
-    while ($row = mysqli_fetch_assoc($result)) {
-        $content[] = $row['categoryname'];
+        return $conn;
     }
 }
 
-// Store the content array in the session
-$_SESSION['content'] = $content;
+class AddingArticle
+{
+
+    private $db;
+
+    public function __construct($db)
+    {
+        $this->db = $db;
+    }
+
+    public function addArticle()
+    {
+        if (isset($_POST['addButton'])) {
+
+            //Code to handle form submission goes here
+
+            $category = $_POST['hidden_category2'];
+            $content = $_POST['textarea'];
+
+            if (!empty($content)) {
+
+                // Generate a unique filename for the text file
+                $filename = uniqid() . '.txt';
+
+                // Define the path where the text file will be saved
+                $path = 'C:\xampp\htdocs\Articles' . $filename;
+
+                // Save the content to the text file and check for errors
+                $result = file_put_contents($path, $content);
+                if ($result === false) {
+                    echo "Error: Could not save file";
+                    return;
+
+                }
+
+                // Prepare the SQL statement to insert the file path into the database
+                $conn = $this->db->getConnection();
+                $sql = "INSERT INTO content (ContentPath, CategoryName) VALUES (?, ?)";
+                $stmt = $conn->prepare($sql);
+                $stmt->bind_param("ss", $path, $category);
+
+                // Execute the SQL statement
+
+                if ($stmt->execute() === false) {
+                    echo "Error: " . $stmt->error;
+                    return;
+                }
+
+                echo "Record created successfully";
+
+            } else {
+                echo "Error: Content is empty";
+                exit;
+            }
+
+        }
+    }
+}
+
+class VideoUploader
+{
+    private $db;
+
+    public function __construct($db)
+    {
+        $this->db = $db;
+    }
+
+    public function uploadVideo()
+    {
+        if (isset($_POST["uploadButton"])) {
+            $path = 'Videos/';
+
+            $allowedExts = array("mp3", "mp4");
+            $extension = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
+
+            if (in_array($extension, $allowedExts)) {
+                if ($_FILES["file"]["error"] > 0) {
+                    echo "Return Code: " . $_FILES["file"]["error"] . "<br />";
+                } else {
+                    echo "Upload: " . $_FILES["file"]["name"] . "<br />";
+                    echo "Type: " . $_FILES["file"]["type"] . "<br />";
+                    echo "Size: " . ($_FILES["file"]["size"] / 1024) . " Kb<br />";
+                    echo "Temp file: " . $_FILES["file"]["tmp_name"] . "<br />";
+
+                    if (file_exists("VideosImported/" . $_FILES["file"]["name"])) {
+                        echo $_FILES["file"]["name"] . " already exists. ";
+                    } else {
+                        move_uploaded_file(
+                            $_FILES["file"]["tmp_name"],
+                            "VideosImported/" . $_FILES["file"]["name"]
+                        );
+                        echo "Stored in: " . "VideosImported/" . $_FILES["file"]["name"];
+                        $path = 'C:\xampp\htdocs\VideosImported' . $_FILES["file"]["name"];
+                        if ($extension == "mp3") {
+                            $type = "Record";
+                        }
+                        if ($extension == "mp4") {
+                            $type = "Video";
+                        }
+
+                        $category = $_POST['hidden_category'];
+
+                        $sql = "INSERT INTO content (ContentPath, CategoryName, Type) VALUES (?, ?, ?)";
+                        $conn = $this->db->getConnection();
+                        $stmt = $conn->prepare($sql);
+                        $stmt->bind_param("sss", $path, $category, $type);
+
+                        // Execute the SQL statement
+                        if ($stmt->execute() === false) {
+                            echo "Error: " . $stmt->error;
+                            return;
+                        }
+
+                        echo "Record created successfully";
+                    }
+                }
+            } else {
+                echo "Invalid file";
+            }
+        }
+    }
+}
 
 
+class Content
+{
+    private $db;
+
+    public function __construct($db)
+    {
+        $this->db = $db;
+    }
+
+    public function getAllContent()
+    {
+        $sql = "SELECT * FROM content";
+        $conn = $this->db->getConnection();
+        $result = $conn->query($sql);
+
+        // check if any rows returned
+        if ($result->num_rows > 0) {
+            // output data of each row
+            while ($row = $result->fetch_assoc()) {
+                // use $row data to generate HTML code
+                echo '<div class="container">';
+                echo '<div class="Publicher">';
+                echo '<h1>' . $row['CategoryName'] . '</h1>';
+                echo '<h3>' . $row['ContentPath'] . '</h3>';
+                echo '<p>' . $row['Type'] . '</p>';
+                echo '</div>';
+                echo '</div>';
+            }
+        } else {
+            echo "0 results";
+        }
+    }
+}
+
+class FollowedCategories
+{
+    private $db;
+
+    public function __construct($db)
+    {
+        $this->db = $db;
+    }
+
+    public function getContent()
+    {
+        $conn = $this->db->getConnection();
+        $sql = "SELECT * FROM followedcategories";
+        $result = mysqli_query($conn, $sql);
+
+        // Create an array to store the content
+        $content = array();
+
+        // Check if any rows were returned
+        if (mysqli_num_rows($result) > 0) {
+            // Loop through each row and add it to the content array
+            while ($row = mysqli_fetch_assoc($result)) {
+                $content[] = $row['categoryname'];
+            }
+        }
+
+        // Store the content array in the session
+        $_SESSION['content'] = $content;
+    }
+}
+
+
+// Usage:
+$database = new DatabaseConnection();
+
+$article = new AddingArticle($database);
+$article->addArticle();
+
+
+$media = new VideoUploader($database);
+$media->uploadVideo();
+
+$followedCategories = new FollowedCategories($database);
+$followedCategories->getContent();
 
 ?>
+
+
+
 <!DOCTYPE html>
 
 <html>
@@ -408,12 +493,13 @@ $_SESSION['content'] = $content;
                     <p></p>
                     <span class="close-button"
                         onclick="document.getElementById('popup2').style.display = 'none'">&times;</span>
-                    <form class="record"action="<?php echo $_SERVER['PHP_SELF'] ?>" method="POST" enctype="multipart/form-data">
+                    <form class="record" action="<?php echo $_SERVER['PHP_SELF'] ?>" method="POST"
+                        enctype="multipart/form-data">
                         <label for="file">Choose video or record:</label>
                         <input type="file" id="file" name="file">
                         <br><br>
-						<input type="hidden" name="hidden_category" id="hidden_category" value="">
-                        <input type="submit" value="Upload" name="uploadButton" >
+                        <input type="hidden" name="hidden_category" id="hidden_category" value="">
+                        <input type="submit" value="Upload" name="uploadButton">
                     </form>
                 </div>
                 <div id="popup3" class="popup">
@@ -435,7 +521,7 @@ $_SESSION['content'] = $content;
 
                 function showPopup2() {
                     document.getElementById("popup2").style.display = "block";
-					var category = document.getElementById("menu1").value;
+                    var category = document.getElementById("menu1").value;
                     document.getElementById("hidden_category").value = category;
                 }
 
@@ -449,34 +535,33 @@ $_SESSION['content'] = $content;
         </div>
 
     </div>
-    <div>
-        <?php
-        
-$sql = "SELECT * FROM content";
-$result = mysqli_query($conn, $sql);
 
-// check if any rows returned
-if (mysqli_num_rows($result) > 0) {
-    // output data of each row
-    while($row = mysqli_fetch_assoc($result)) {
-        // use $row data to generate HTML code
-        echo '<div class="container">';
-        echo '<div class="Publicher">';
-        echo '<h1>'.$row['CategoryName'].'</h1>';
-        echo '<h3>'.$row['ContentPath'].'</h3>';
-        echo '<p>'.$row['Type'].'</p>';
-        echo '</div>';
-        echo '</div>';
-    }
-} else {
-    echo "0 results";
-}
-?>
+    <div class="container">
 
+        <div class="Publicher ">
+            <h1>Hasnaa Ahmed </h1>
+            <h3> Languge </h3>
 
-        
-</div>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed auctor tristique lorem, vel sagittis elit.
+                Nulla facilisi. Fusce sit amet dolor at augue ullamcorper auctor. Praesent varius luctus ex, ac rutrum
+                turpis suscipit sit amet. Sed vel tellus eu massa molestie malesuada. Aenean vehicula, lorem sit amet
+                pharetra aliquam, velit velit elementum lectus, ut tempus turpis sem vel enim. Praesent vel magna quam.
+                Aliquam erat volutpat. Mauris lobortis arcu vel pellentesque pulvinar. Ut sed diam ac sapien feugiat
+                consectetur.</p>
+        </div>
+    </div>
+    <div class="container">
+        <div class="Publicher ">
+            <h1>Nada Mandour </h1>
+            <h3> technology </h3>
+            <img class="images" src="technology.jpg" alt="technology Image">
+        </div>
+    </div>
 
+    <?php
+    $content = new Content($database);
+    $content->getAllContent();
+    ?>
 
 
 </body>
