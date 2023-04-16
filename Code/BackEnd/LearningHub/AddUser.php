@@ -25,14 +25,29 @@ class AddUser {
 
   public function addNewUser($username, $email, $password, $role) {
       $conn = $this->db->getConnection();
-      $stmt = $conn->prepare("INSERT INTO `users` (`username`, `password`, `email`, `role`) values(?, ?, ?, ?)");
-      $stmt->bind_param("ssss", $username, $password, $email, $role);
-      $execval = $stmt->execute();
-      if (!$execval) {
-          echo "Error: " . $stmt->error;
-      } else {
-          echo "User added successfully...";
-      }
+     $stmt =$conn->prepare("SELECT * FROM users WHERE username = ?");
+    $stmt->bind_param("s", $username);
+    $stmt->execute();
+    $result = $stmt->get_result();
+if ($result->num_rows > 0) {
+  // Username already exists, display alert
+  echo "<script>alert('Username is already taken. Please choose a different username.');</script>";
+  echo "<script>clearTextField();</script>";
+  
+} else {
+  // Username is available, insert new user
+  $stmt = $conn->prepare("INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)");
+  $stmt->bind_param("ssss", $username, $email, $password, $role);
+ $execval= $stmt->execute();
+  
+	
+	if (!$execval) {
+		echo "Error: " . $stmt->error;
+	} else {
+		echo "the user added successfully.";
+	}
+  // Display success message or redirect to another page
+}
   }
 }
 
@@ -189,6 +204,66 @@ if (isset($_POST['addBtn'])) {
     }
     </style>
 
+ <script>
+    function onChange() {
+        const password = document.querySelector('input[name=password]');
+        const confirm = document.querySelector('input[name=confirm_password]');
+        if (confirm_password.value === password.value) {
+            confirm_password.setCustomValidity('');
+        } else {
+            confirm_password.setCustomValidity('Passwords do not match');
+        }
+    }
+	 function validateTextField(inputText) {
+  var regex = /^[a-zA-Z]+$/;
+  return regex.test(inputText);
+}
+	function validateInput() {
+  var inputText = document.getElementById("username").value;
+  if (!validateTextField(inputText)) {
+    alert("the data entered are not valid. Please enter only letters");
+	document.getElementById("username").value = "";
+	
+  }
+}
+
+function validateInput2() {
+  var inputText2 = document.getElementById("password").value;
+  if (!validateTextField2(inputText2)) {
+    alert("Input is invalid. Please enter at least 5 characters, one numeric value, and one special character.");
+	document.getElementById("password").value = "";
+    return false;
+  }
+  return true;
+}
+
+function validateTextField2(inputText2) {
+  // Check if input has at least 5 characters
+   if (inputText2.length < 5) {
+	  
+    return false;
+  }
+
+  // Check if input has at least one digit
+  if (!/\d/.test(inputText2)) {
+	 
+    return false;
+  }
+
+  // Check if input has at least one special character
+  if (!/[!@#$%^&*(),.?":{}|<>]/.test(inputText2)) {
+	  
+    return false;
+  }
+
+  // Input is valid
+  return true;
+}
+  function clearTextField() {
+      document.getElementById("username").value = "";
+	  	  
+    }
+    </script>
 </head>
 
 <body>
@@ -224,24 +299,24 @@ if (isset($_POST['addBtn'])) {
             <div class="right-side">
                 <form action="#" method="post">
                     <label for="username">Username:</label>
-                    <input type="text" id="username" name="username" required>
+                    <input type="text" id="username" onblur="validateInput()" name="username" required>
 
                     <label for="email">Email:</label>
                     <input type="email" id="email" name="email" required>
 
                     <label for="password">Password:</label>
-                    <input type="password" id="password" name="password" required>
+                    <input type="password" id="password" onblur="validateInput2()" name="password" required>
 
                     <label for="confirm_password">Confirm Password:</label>
-                    <input type="password" id="confirm_password" name="confirm_password" required>
+                    <input type="password" id="confirm_password" onChange="onChange()" name="confirm_password" required>
                     <label for="Role">Role:
-                        <input type="radio" name="my-radio" value="Admin"> Admin
-                        <input type="radio" name="my-radio" value="User"> User
+                        <input type="radio" name="my-radio" value="Admin" required> Admin
+                        <input type="radio" name="my-radio" value="User" required> User
                     </label>
                     <br>
 
 
-                    <input type="submit" name="addBtn" value="Add">
+                    <input type="submit" name="addBtn" onChange="onChange()" value="Add">
                 </form>
             </div>
         </div>

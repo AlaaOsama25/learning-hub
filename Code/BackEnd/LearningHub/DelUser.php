@@ -29,8 +29,14 @@ class DeleteUser {
       if (!$execval) {
           echo "Error: " . $stmt->error;
       } else {
-          echo "User deleted successfully...";
-      }
+    $num_rows_affected = $stmt->affected_rows;
+    if ($num_rows_affected == 0) {
+        echo "User does not exist.";
+    } else {
+        echo "User deleted successfully...";
+    }
+}
+	  
   }
 }
 
