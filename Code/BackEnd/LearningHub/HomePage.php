@@ -157,21 +157,23 @@ class Content
         $this->db = $db;
     }
 
-    public function getAllContent()
+    public function getArticlesContent()
     {
-        $sql = "SELECT * FROM content";
+
+        // Retrieve file path from the database
+        $sql = "SELECT * FROM content WHERE Type = 'Article'";
         $conn = $this->db->getConnection();
         $result = $conn->query($sql);
 
-        // check if any rows returned
         if ($result->num_rows > 0) {
-            // output data of each row
+            // Read the contents of the text file
             while ($row = $result->fetch_assoc()) {
-                // use $row data to generate HTML code
+                $filepath = $row['ContentPath'];
+                $file_contents = file_get_contents($filepath);
                 echo '<div class="container">';
                 echo '<div class="Publicher">';
                 echo '<h1>' . $row['CategoryName'] . '</h1>';
-                echo '<h3>' . $row['ContentPath'] . '</h3>';
+                echo '<h3>' . $file_contents . '</h3>';
                 echo '<p>' . $row['Type'] . '</p>';
                 echo '</div>';
                 echo '</div>';
@@ -180,8 +182,8 @@ class Content
             echo "0 results";
         }
     }
-}
 
+}
 class FollowedCategories
 {
     private $db;
@@ -239,197 +241,197 @@ $followedCategories->getContent();
     <meta charset="UTF-8">
     <title>Home Page </title>
     <style>
-    /* CSS for the toolbar */
-    .toolbar {
-        background-color: #f2f2f2;
-        height: 50px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 0 20px;
-    }
+        /* CSS for the toolbar */
+        .toolbar {
+            background-color: #f2f2f2;
+            height: 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
 
-    .toolbar__logo {
-        font-size: 24px;
-        font-weight: bold;
-    }
+        .toolbar__logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
 
-    .toolbar__menu {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
+        .toolbar__menu {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-    .toolbar__menu-item {
-        margin-right: 20px;
-        cursor: pointer;
-    }
+        .toolbar__menu-item {
+            margin-right: 20px;
+            cursor: pointer;
+        }
 
-    .toolbar__menu-item:hover {
-        text-decoration: underline;
-    }
+        .toolbar__menu-item:hover {
+            text-decoration: underline;
+        }
 
-    /* CSS for the profile page */
-    body {
-        font-family: Arial, sans-serif;
-    }
+        /* CSS for the profile page */
+        body {
+            font-family: Arial, sans-serif;
+        }
 
-    .profile {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
+        .profile {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
 
-    .profile__image {
-        width: 200px;
-        height: 200px;
-        border-radius: 50%;
-        object-fit: cover;
-        margin-bottom: 20px;
-    }
+        .profile__image {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 20px;
+        }
 
-    .profile__name {
-        font-size: 24px;
-        font-weight: bold;
-        margin-bottom: 10px;
-    }
+        .profile__name {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
 
-    .profile__info {
-        font-size: 16px;
-        line-height: 1.5;
-        text-align: center;
-        max-width: 400px;
-        margin-bottom: 20px;
-    }
+        .profile__info {
+            font-size: 16px;
+            line-height: 1.5;
+            text-align: center;
+            max-width: 400px;
+            margin-bottom: 20px;
+        }
 
-    .profile__info-item {
-        margin-bottom: 10px;
-    }
+        .profile__info-item {
+            margin-bottom: 10px;
+        }
 
-    .profile__info-label {
-        font-weight: bold;
-        margin-right: 10px;
-    }
+        .profile__info-label {
+            font-weight: bold;
+            margin-right: 10px;
+        }
 
-    input[type="submit"] {
-        background-color: #4CAF50;
-        color: #fff;
-        padding: 10px 20px;
-        border: none;
-        border-radius: 3px;
-        cursor: pointer;
-        font-size: 16px;
-        font-weight: bold;
-    }
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+        }
 
-    input[type="submit"]:hover {
-        background-color: #3e8e41;
-    }
+        input[type="submit"]:hover {
+            background-color: #3e8e41;
+        }
 
-    .left-side {
-        flex: 1;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        max-width: 800px;
-    }
+        .left-side {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            max-width: 800px;
+        }
 
-    .container {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        justify-content: flex-start;
-        border: 1px solid #ccc;
-        padding: 10px;
-        margin-bottom: 10px;
-        margin: 0 auto;
-    }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: flex-start;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+            margin: 0 auto;
+        }
 
-    .images {
-        max-width: 100%;
-        height: 5 px;
-        margin-bottom: 20px;
-        align: center;
-    }
+        .images {
+            max-width: 100%;
+            height: 5 px;
+            margin-bottom: 20px;
+            align: center;
+        }
 
-    .share {
-        display: flex;
-        flex-wrap: wrap;
+        .share {
+            display: flex;
+            flex-wrap: wrap;
 
-        border: 1px solid #ccc;
-        padding: 10px;
-        margin-bottom: 10px;
-        margin: 0 auto;
-    }
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+            margin: 0 auto;
+        }
 
-    /* CSS for the frame */
-    fieldset {
-        border: 2px solid #ddd;
-        padding: 10px;
-        margin: 20px 0;
-    }
+        /* CSS for the frame */
+        fieldset {
+            border: 2px solid #ddd;
+            padding: 10px;
+            margin: 20px 0;
+        }
 
-    legend {
-        font-weight: bold;
-    }
+        legend {
+            font-weight: bold;
+        }
 
-    /* CSS for the overlay */
-    .overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
-        display: none;
-        justify-content: center;
-        align-items: center;
-    }
+        /* CSS for the overlay */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
 
-    .overlay-content {
-        background-color: white;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-        text-align: center;
-    }
+        .overlay-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
 
-    /* Style for the pop-up */
-    .popup {
-        display: none;
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        width: 300px;
-        height: 100px;
-        transform: translate(-50%, -50%);
-        background-color: #fff;
-        padding: 20px;
-        border: 1px solid #ccc;
-        z-index: 9999;
-    }
+        /* Style for the pop-up */
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 300px;
+            height: 100px;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            padding: 20px;
+            border: 1px solid #ccc;
+            z-index: 9999;
+        }
 
-    .close-button {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        cursor: pointer;
-    }
+        .close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+        }
 
-    a {
-        text-decoration: none;
-        color: black;
-    }
+        a {
+            text-decoration: none;
+            color: black;
+        }
     </style>
     <script>
-    // JavaScript to show/hide the overlay
-    function showOverlay() {
-        document.querySelector('.overlay').style.display = "flex";
-    }
+        // JavaScript to show/hide the overlay
+        function showOverlay() {
+            document.querySelector('.overlay').style.display = "flex";
+        }
 
-    function hideOverlay() {
-        document.querySelector('.overlay').style.display = "none";
-    }
+        function hideOverlay() {
+            document.querySelector('.overlay').style.display = "none";
+        }
     </script>
 
 
@@ -515,21 +517,21 @@ $followedCategories->getContent();
                 </form>
 
                 <script>
-                function showPopup() {
-                    document.getElementById("popup1").style.display = "block";
-                }
+                    function showPopup() {
+                        document.getElementById("popup1").style.display = "block";
+                    }
 
-                function showPopup2() {
-                    document.getElementById("popup2").style.display = "block";
-                    var category = document.getElementById("menu1").value;
-                    document.getElementById("hidden_category").value = category;
-                }
+                    function showPopup2() {
+                        document.getElementById("popup2").style.display = "block";
+                        var category = document.getElementById("menu1").value;
+                        document.getElementById("hidden_category").value = category;
+                    }
 
-                function showPopup3() {
-                    document.getElementById("popup3").style.display = "block";
-                    var category = document.getElementById("menu1").value;
-                    document.getElementById("hidden_category2").value = category;
-                }
+                    function showPopup3() {
+                        document.getElementById("popup3").style.display = "block";
+                        var category = document.getElementById("menu1").value;
+                        document.getElementById("hidden_category2").value = category;
+                    }
                 </script>
             </fieldset>
         </div>
@@ -560,7 +562,7 @@ $followedCategories->getContent();
 
     <?php
     $content = new Content($database);
-    $content->getAllContent();
+    $content->getArticlesContent();
     ?>
 
 
