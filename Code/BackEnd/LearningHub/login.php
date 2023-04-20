@@ -37,6 +37,7 @@ class login {
 				$_SESSION['username'] = $row['username'];
                 $_SESSION['email'] = $row['email'];
                 $_SESSION['role'] = $row['role'];
+				$_SESSION['userID'] = $row['userID'];
 
 
 				echo "Login successfully...";

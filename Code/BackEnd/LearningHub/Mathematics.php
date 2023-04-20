@@ -1,9 +1,93 @@
+<?php
+$condition=true;
+// Database connection
+if (empty(session_id()) && !headers_sent()) {
+  session_start();
+}
+
+require_once 'connect.php';
+$db = new connect();
+$conn = $db->connection();
+
+if (!$conn) {
+  echo "<script>alert('Connection failed: " . mysqli_connect_error() . "')</script>";
+}
+
+
+     // $conn = $this->db->getConnection();
+	 
+	  $userid = $_SESSION['userID'];
+      $categoryname="Mathematics";
+	 
+	  
+	 function followtechnology($conn, $userid, $categoryname){
+	$stmt =$conn->prepare("SELECT * FROM followedcategories WHERE UserID = ? and categoryname= ? ");
+    $stmt->bind_param("ss", $userid,$categoryname);
+    $stmt->execute();
+    $result = $stmt->get_result();
+if ($result->num_rows > 0) {
+  // Username already exists, display alert
+  echo "you already follow this category";
+  
+} else {
+  // Username is available, insert new user
+  $stmt = $conn->prepare("INSERT INTO followedcategories (UserID, categoryname) VALUES (?, ?)");
+      $stmt->bind_param("ss", $userid, $categoryname);
+      $execval = $stmt->execute();
+  
+	
+	if (!$execval) {
+		echo "Error: " . $stmt->error;
+	} else {
+		echo "you are now following this category";
+	}
+
+
+	 }}
+	 function unfollowtechnology($conn, $userid, $categoryname){
+	$stmt =$conn->prepare("SELECT * FROM followedcategories WHERE UserID = ? and categoryname= ? ");
+    $stmt->bind_param("ss", $userid,$categoryname);
+    $stmt->execute();
+    $result = $stmt->get_result();
+if ($result->num_rows == 0) {
+  // Username already exists, display alert
+  echo "you don't follow this category";
+  
+} else {
+  // Username is available, insert new user
+  $stmt = $conn->prepare("DELETE FROM followedcategories WHERE UserID= ? AND categoryname =?");
+      $stmt->bind_param("ss", $userid, $categoryname);
+      $execval = $stmt->execute();
+  
+	
+	if (!$execval) {
+		echo "Error: " . $stmt->error;
+	} else {
+		echo "you unfollowed this category";
+	}
+
+
+	 }}
+	 
+	 if (isset($_POST['followBtn'])) {
+ 
+   $result = followtechnology($conn, $userid, $categoryname);
+    echo $result;
+}
+if (isset($_POST['unfollowBtn'])) {
+ 
+   $result = unfollowtechnology($conn, $userid, $categoryname);
+    echo $result;
+}
+  
+
+?>
 <!DOCTYPE html>
 
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Technology </title>
+  <title>Mathematics </title>
   <style>
   /* CSS for the toolbar */
     .toolbar {
@@ -172,6 +256,72 @@
     text-decoration: none;
     color: black;
   }
+  follow-button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.follow-button:hover {
+  background-color: #0069d9;
+}
+ unfollow-button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.unfollow-button:hover {
+  background-color: #0069d9;
+}
+.container2 {
+			display: flex;
+			flex-wrap: wrap;
+			align-items: left;
+			justify-content: left;
+			border: 1px solid #ccc;
+           padding: 10px;
+            margin-bottom: 10px;
+			margin: 0 auto;
+		}
+		
+				
+	
+
+    #follow-button,
+    #unfollow-button {
+        
+		background-color: #4CAF50;
+			color: #fff;
+			padding: 10px 20px;
+			border: none;
+			border-radius: 3px;
+			cursor: pointer;
+			font-size: 16px;
+			font-weight: bold;
+        color: white;
+    }
+
+   
+
+    #unfollow-button::after {
+        content: "";
+    }
+
+    #unfollow-button.followed::after {
+        content: "";
+    }	
+		
+	
+		
   </style>
   <script>
     // JavaScript to show/hide the overlay
@@ -189,11 +339,11 @@
 </head>
 <body>
   <div class="toolbar">
-<div class="toolbar__logo"> <a href="Home Page.html">Learning HUB</a></div>
+    <div class="toolbar__logo"> <a href="HomePage.php">Learning HUB</a></div>
     <div class="toolbar__menu">
-      <div class="toolbar__menu-item"><a href="Languge.html">Languge</a></div>
-      <div class="toolbar__menu-item"><a href="Mathematics.html">Mathematics</a></div>
-      <div class="toolbar__menu-item"> <a href="Technology.html">Technology</a></div>
+      <div class="toolbar__menu-item"><a href="Languge.php">Languge</a></div>
+      <div class="toolbar__menu-item"><a href="Mathematics.php">Mathematics</a></div>
+      <div class="toolbar__menu-item"> <a href="Technology.php">Technology</a></div>
 	  </div>
 	  
 	  <div  
@@ -202,7 +352,7 @@
   <select id="menu" onchange="window.location.href=this.value;">
     <option value=""></option>
     <option value="notification.html">notification</option>
-    <option value="profile.html">profile</option>
+    <option value="profile.php">profile</option>
     
   </select>
   </div>
@@ -214,6 +364,36 @@
 			 <img src="image.jpg" alt="Login Image">
 					 </div>
 					 </div>
+					 
+					 
+					  <div class="container2">
+<div >
+<h1>Technology  </h1> 
+<form id="myform" action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post">
+<button id="follow-button" name="followBtn" >Follow</button>
+<button id="unfollow-button" name="unfollowBtn"  >Unfollow</button>
+
+</form>
+
+<script>
+  function followUser() {
+    // Add follow logic here...
+    document.getElementById("follow-button").style.display = "none";
+    document.getElementById("unfollow-button").style.display = "block";
+  }
+
+  function unfollowUser() {
+    // Add unfollow logic here...
+    document.getElementById("follow-button").style.display = "block";
+    document.getElementById("unfollow-button").style.display = "none";
+  }
+</script>
+
+</div>
+</div>
+					 
+					 
+					 
 	<div class="share" style ="align-items:left"> 
 	
 	<div>
@@ -229,8 +409,8 @@
 	  <select id="menu"  onchange=""> 
     <option value="" disabled selected>category</option>
     <option value="Languge">Languge</option>
-    <option value="Mathematics">Mathematics</option>
-    <option value="Technology" selected>Technology</option>
+    <option value="Mathematics"selected >Mathematics</option>
+    <option value="Technology" >Technology</option>
     
   </select>  </p>
 	  
@@ -279,25 +459,27 @@
 	 </div>
 	
 </div>	
-  
+ 
+
+
   <div class="container">
 
 		<div class="Publicher "><h1>Hasnaa Ahmed </h1>
-		<h3> Technology </h3>
+		<h3> Mathematics </h3>
 		
   <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed auctor tristique lorem, vel sagittis elit. Nulla facilisi. Fusce sit amet dolor at augue ullamcorper auctor. Praesent varius luctus ex, ac rutrum turpis suscipit sit amet. Sed vel tellus eu massa molestie malesuada. Aenean vehicula, lorem sit amet pharetra aliquam, velit velit elementum lectus, ut tempus turpis sem vel enim. Praesent vel magna quam. Aliquam erat volutpat. Mauris lobortis arcu vel pellentesque pulvinar. Ut sed diam ac sapien feugiat consectetur.</p>
   </div>
   </div>
   <div class="container">
   <div class="Publicher "><h1>Nada Mandour </h1>
-		<h3> technology </h3>
+		<h3> Mathematics </h3>
 		<img class = "images" src="technology.jpg" alt="technology Image">
 		</div>
 	    </div>
 		
 		 <div class="container">
 		<div class="Publicher "><h1>Hasnaa Ahmed </h1>
-		<h3> Technology </h3>
+		<h3> Mathematics </h3>
 		
   <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed auctor tristique lorem, vel sagittis elit. Nulla facilisi. Fusce sit amet dolor at augue ullamcorper auctor. Praesent varius luctus ex, ac rutrum turpis suscipit sit amet. Sed vel tellus eu massa molestie malesuada. Aenean vehicula, lorem sit amet pharetra aliquam, velit velit elementum lectus, ut tempus turpis sem vel enim. Praesent vel magna quam. Aliquam erat volutpat. Mauris lobortis arcu vel pellentesque pulvinar. Ut sed diam ac sapien feugiat consectetur.</p>
   </div>

@@ -340,11 +340,11 @@ unfollow-button {
 </head>
 <body>
   <div class="toolbar">
-<div class="toolbar__logo"> <a href="Home Page.html">Learning HUB</a></div>
+<div class="toolbar__logo"> <a href="Home Page.php">Learning HUB</a></div>
     <div class="toolbar__menu">
-      <div class="toolbar__menu-item"><a href="Languge.html">Languge</a></div>
-      <div class="toolbar__menu-item"><a href="Mathematics.html">Mathematics</a></div>
-      <div class="toolbar__menu-item"> <a href="Technology.html">Technology</a></div>
+      <div class="toolbar__menu-item"><a href="Languge.php">Languge</a></div>
+      <div class="toolbar__menu-item"><a href="Mathematics.php">Mathematics</a></div>
+      <div class="toolbar__menu-item"> <a href="Technology.php">Technology</a></div>
 	  </div>
 	  
 	  <div  
@@ -353,11 +353,11 @@ unfollow-button {
   <select id="menu" onchange="window.location.href=this.value;">
     <option value=""></option>
     <option value="notification.html">notification</option>
-    <option value="profile.html">profile</option>
+    <option value="profile.php">profile</option>
     
   </select>
   </div>
-	  <div class="toolbar__menu-item"><a href="login.html">Log out</a></div>
+	  <div class="toolbar__menu-item"><a href="login.php">Log out</a></div>
     </div>
   </div>
   
@@ -384,12 +384,7 @@ unfollow-button {
 <button id="follow-button" name="followBtn" >Follow</button>
 <button id="unfollow-button" name="unfollowBtn"  >Unfollow</button>
 
-<script>
-
- 
-  
-</script>
-
+</form>
 
 
 
@@ -446,7 +441,7 @@ unfollow-button {
 	  <span class="close-button" onclick="document.getElementById('popup3').style.display = 'none'">&times;</span>
 	<label for="textarea">Enter your message:</label><br><br>
     <textarea id="textarea" name="textarea" rows="4" cols="50"></textarea><br>
-	<input type="submit" value="add" onclick="window.location.href='Home Page.html'"> </button> 
+	<input type="submit" value="add" onclick="window.location.href='HomePage.php'"> </button> 
     </div>
 	
     <script>
