@@ -183,7 +183,43 @@ class Content
         }
     }
 
+    public function getVideosContent()
+    {
+        $video_path2 = 'VideosImported/20200806_173554.mp4';
+
+        // Retrieve file path from the database
+        $sql = "SELECT * FROM content WHERE Type = 'Video'";
+        $conn = $this->db->getConnection();
+        $result = $conn->query($sql);
+
+        if ($result->num_rows > 0) {
+            // Read the contents of the text file
+            while ($row = $result->fetch_assoc()) {
+                $video_path = $row['ContentPath'];
+                $filename = basename($video_path);
+                $position = 14; // The position after which you want to add a forward slash after "VideosImported"
+                $filename = substr($filename, 0, $position) . '/' . substr($filename, $position);
+                echo '<div class="container">';
+                echo '<div class="Publicher">';
+                echo '<h1>' . $row['CategoryName'] . '</h1>';
+                echo '<video width="320" height="240" controls>';
+                echo '<source src="' . $filename . '" type="video/mp4">';
+                echo 'Your browser does not support the video tag.';
+                echo '</video>';
+                echo '<p>' . $row['Type'] . '</p>';
+                echo '</div>';
+                echo '</div>';
+            }
+        } else {
+            echo "0 results";
+        }
+    }
+
+
 }
+
+
+
 class FollowedCategories
 {
     private $db;
@@ -563,6 +599,10 @@ $followedCategories->getContent();
     <?php
     $content = new Content($database);
     $content->getArticlesContent();
+
+    $content = new Content($database);
+    $content->getVideosContent();
+
     ?>
 
 
