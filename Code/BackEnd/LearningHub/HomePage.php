@@ -1,4 +1,5 @@
 <?php
+
 class DatabaseConnection
 {
     private $db;
@@ -97,9 +98,12 @@ class VideoUploader
             $path = 'Videos/';
 
             $allowedExts = array("mp3", "mp4");
+			
             $extension = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
-
-            if (in_array($extension, $allowedExts)) {
+			
+		
+            
+            if (in_array($extension, $allowedExts) && ($_FILES["file"]["size"] < 35000000)) {
                 if ($_FILES["file"]["error"] > 0) {
                     echo "Return Code: " . $_FILES["file"]["error"] . "<br />";
                 } else {
@@ -141,7 +145,7 @@ class VideoUploader
                     }
                 }
             } else {
-                echo "Invalid file";
+                echo "Invalid file , files must be mp3 or mp4 and with size <35 MB";
             }
         }
     }
