@@ -173,23 +173,28 @@ class Content
             // Read the contents of the text file
             while ($row = $result->fetch_assoc()) {
                 $filepath = $row['ContentPath'];
+				$content_id = $row['ContentID'];
+                $type = $row['Type'];
                 $file_contents = file_get_contents($filepath);
                 echo '<div class="container">';
                 echo '<div class="Publicher">';
                 echo '<h1>' . $row['CategoryName'] . '</h1>';
                 echo '<h3>' . $file_contents . '</h3>';
                 echo '<p>' . $row['Type'] . '</p>';
+				if ($_SESSION['role'] === 'Admin') {
+                    echo '<a href="delete.php?id=' . $row['ContentID'] . '&type=' . $row['Type'] . '"><i class="fa fa-trash"></i></a>';
+                }
                 echo '</div>';
                 echo '</div>';
             }
         } else {
-            echo "0 results";
+            echo "";
         }
     }
 
     public function getVideosContent()
     {
-        $video_path2 = 'VideosImported/20200806_173554.mp4';
+        //$video_path2 = 'VideosImported/20200806_173554.mp4';
 
         // Retrieve file path from the database
         $sql = "SELECT * FROM content WHERE Type = 'Video'";
@@ -211,13 +216,51 @@ class Content
                 echo 'Your browser does not support the video tag.';
                 echo '</video>';
                 echo '<p>' . $row['Type'] . '</p>';
+				if ($_SESSION['role'] === 'Admin') {
+                    echo '<a href="delete.php?id=' . $row['ContentID'] . '&type=' . $row['Type'] . '"><i class="fa fa-trash"></i></a>';
+                }
                 echo '</div>';
                 echo '</div>';
             }
         } else {
-            echo "0 results";
+            echo "";
         }
     }
+	public function getRecordsContent()
+    {
+        //$video_path2 = 'VideosImported/20200806_173554.mp4';
+
+        // Retrieve file path from the database
+        $sql = "SELECT * FROM content WHERE Type = 'Record'";
+        $conn = $this->db->getConnection();
+        $result = $conn->query($sql);
+
+        if ($result->num_rows > 0) {
+       
+            while ($row = $result->fetch_assoc()) {
+                $record_path = $row['ContentPath'];
+                $filename = basename($record_path);
+                $position = 14; // The position after which you want to add a forward slash after "recordsImported"
+                $filename = substr($filename, 0, $position) . '/' . substr($filename, $position);
+                echo '<div class="container">';
+                echo '<div class="Publicher">';
+                echo '<h1>' . $row['CategoryName'] . '</h1>';
+                echo '<audio controls>';
+                echo '<source src="' . $filename . '" type="audio/mp3">';
+                echo '</audio>';
+                echo '<p>' . $row['Type'] . '</p>';
+				if ($_SESSION['role'] === 'Admin') {
+                    echo '<a href="delete.php?id=' . $row['ContentID'] . '&type=' . $row['Type'] . '"><i class="fa fa-trash"></i></a>';
+                }
+                echo '</div>';
+                echo '</div>';
+            }
+        } else {
+            echo "";
+        }
+    }
+
+
 
 
 }
@@ -280,6 +323,7 @@ $followedCategories->getContent();
 <head>
     <meta charset="UTF-8">
     <title>Home Page </title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
         /* CSS for the toolbar */
         .toolbar {
@@ -606,7 +650,9 @@ $followedCategories->getContent();
 
     $content = new Content($database);
     $content->getVideosContent();
-
+	
+	$content = new Content($database);
+    $content->getRecordsContent();
     ?>
 
 
