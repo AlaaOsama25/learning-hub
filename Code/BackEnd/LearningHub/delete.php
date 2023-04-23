@@ -2,12 +2,7 @@
 // Start the session
 session_start();
 
-// Check if the user is logged in as admin
-if ($_SESSION['role'] !== 'Admin') {
-    // Redirect to login page or show an error message
-    header('Location: login.php');
-    exit();
-}
+
 
 // Check if the content ID and type are set
 if (!isset($_GET['id']) || !isset($_GET['type'])) {

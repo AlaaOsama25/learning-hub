@@ -50,6 +50,7 @@ class AddingArticle
 
                 // Define the path where the text file will be saved
                 $path = 'C:\xampp\htdocs\Articles' . $filename;
+				$userID=$_SESSION['userID'];
 
                 // Save the content to the text file and check for errors
                 $result = file_put_contents($path, $content);
@@ -61,9 +62,9 @@ class AddingArticle
 
                 // Prepare the SQL statement to insert the file path into the database
                 $conn = $this->db->getConnection();
-                $sql = "INSERT INTO content (ContentPath, CategoryName) VALUES (?, ?)";
+                $sql = "INSERT INTO content (ContentPath, CategoryName, userID) VALUES (?, ?, ?)";
                 $stmt = $conn->prepare($sql);
-                $stmt->bind_param("ss", $path, $category);
+                $stmt->bind_param("ssi", $path, $category, $userID);
 
                 // Execute the SQL statement
 
@@ -100,7 +101,7 @@ class VideoUploader
             $allowedExts = array("mp3", "mp4");
 			
             $extension = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
-			
+			$userID=$_SESSION['userID'];
 		
             
             if (in_array($extension, $allowedExts) && ($_FILES["file"]["size"] < 35000000)) {
@@ -130,10 +131,10 @@ class VideoUploader
 
                         $category = $_POST['hidden_category'];
 
-                        $sql = "INSERT INTO content (ContentPath, CategoryName, Type) VALUES (?, ?, ?)";
+                        $sql = "INSERT INTO content (ContentPath, CategoryName, Type, userID) VALUES (?, ?, ?, ?)";
                         $conn = $this->db->getConnection();
                         $stmt = $conn->prepare($sql);
-                        $stmt->bind_param("sss", $path, $category, $type);
+                        $stmt->bind_param("sssi", $path, $category, $type, $userID);
 
                         // Execute the SQL statement
                         if ($stmt->execute() === false) {
@@ -181,7 +182,8 @@ class Content
                 echo '<h1>' . $row['CategoryName'] . '</h1>';
                 echo '<h3>' . $file_contents . '</h3>';
                 echo '<p>' . $row['Type'] . '</p>';
-				if ($_SESSION['role'] === 'Admin') {
+
+				if ($_SESSION['role'] === 'Admin'|| $_SESSION['userID']==$row['userID']) {
                     echo '<a href="delete.php?id=' . $row['ContentID'] . '&type=' . $row['Type'] . '"><i class="fa fa-trash"></i></a>';
                 }
                 echo '</div>';
@@ -216,7 +218,7 @@ class Content
                 echo 'Your browser does not support the video tag.';
                 echo '</video>';
                 echo '<p>' . $row['Type'] . '</p>';
-				if ($_SESSION['role'] === 'Admin') {
+				if ($_SESSION['role'] === 'Admin'|| $_SESSION['userID']==$row['userID'] ) {
                     echo '<a href="delete.php?id=' . $row['ContentID'] . '&type=' . $row['Type'] . '"><i class="fa fa-trash"></i></a>';
                 }
                 echo '</div>';
@@ -249,7 +251,7 @@ class Content
                 echo '<source src="' . $filename . '" type="audio/mp3">';
                 echo '</audio>';
                 echo '<p>' . $row['Type'] . '</p>';
-				if ($_SESSION['role'] === 'Admin') {
+				if ($_SESSION['role'] === 'Admin' || $_SESSION['userID']==$row['userID']) {
                     echo '<a href="delete.php?id=' . $row['ContentID'] . '&type=' . $row['Type'] . '"><i class="fa fa-trash"></i></a>';
                 }
                 echo '</div>';
