@@ -45,12 +45,17 @@ class AddingArticle
 
             if (!empty($content)) {
 
+                if (strlen($content) > 1000) {
+                    echo "Error: Content must not exceed 1000 characters";
+                    return;
+                }
+
                 // Generate a unique filename for the text file
                 $filename = uniqid() . '.txt';
 
                 // Define the path where the text file will be saved
                 $path = 'C:\xampp\htdocs\Articles' . $filename;
-				$userID=$_SESSION['userID'];
+                $userID = $_SESSION['userID'];
 
                 // Save the content to the text file and check for errors
                 $result = file_put_contents($path, $content);
@@ -99,11 +104,11 @@ class VideoUploader
             $path = 'Videos/';
 
             $allowedExts = array("mp3", "mp4");
-			
+
             $extension = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
-			$userID=$_SESSION['userID'];
-		
-            
+            $userID = $_SESSION['userID'];
+
+
             if (in_array($extension, $allowedExts) && ($_FILES["file"]["size"] < 35000000)) {
                 if ($_FILES["file"]["error"] > 0) {
                     echo "Return Code: " . $_FILES["file"]["error"] . "<br />";
@@ -151,7 +156,7 @@ class VideoUploader
         }
     }
 }
-$_SESSION['new_content']=false;
+$_SESSION['new_content'] = false;
 
 class Content
 {
@@ -169,8 +174,8 @@ class Content
         $sql = "SELECT * FROM content WHERE Type = 'Article'";
         $conn = $this->db->getConnection();
         $result = $conn->query($sql);
-        
-    
+
+
 
 
         if ($result->num_rows > 0) {
@@ -178,7 +183,7 @@ class Content
             // Read the contents of the text file
             while ($row = $result->fetch_assoc()) {
                 $filepath = $row['ContentPath'];
-				$content_id = $row['ContentID'];
+                $content_id = $row['ContentID'];
                 $type = $row['Type'];
                 $file_contents = file_get_contents($filepath);
                 echo '<div class="container">';
@@ -187,7 +192,7 @@ class Content
                 echo '<h3>' . $file_contents . '</h3>';
                 echo '<p>' . $row['Type'] . '</p>';
 
-				if ($_SESSION['role'] === 'Admin'|| $_SESSION['userID']==$row['userID']) {
+                if ($_SESSION['role'] === 'Admin' || $_SESSION['userID'] == $row['userID']) {
                     echo '<a href="delete.php?id=' . $row['ContentID'] . '&type=' . $row['Type'] . '"><i class="fa fa-trash"></i></a>';
                 }
                 echo '</div>';
@@ -222,7 +227,7 @@ class Content
                 echo 'Your browser does not support the video tag.';
                 echo '</video>';
                 echo '<p>' . $row['Type'] . '</p>';
-				if ($_SESSION['role'] === 'Admin'|| $_SESSION['userID']==$row['userID'] ) {
+                if ($_SESSION['role'] === 'Admin' || $_SESSION['userID'] == $row['userID']) {
                     echo '<a href="delete.php?id=' . $row['ContentID'] . '&type=' . $row['Type'] . '"><i class="fa fa-trash"></i></a>';
                 }
                 echo '</div>';
@@ -232,7 +237,7 @@ class Content
             echo "";
         }
     }
-	public function getRecordsContent()
+    public function getRecordsContent()
     {
         //$video_path2 = 'VideosImported/20200806_173554.mp4';
 
@@ -242,7 +247,7 @@ class Content
         $result = $conn->query($sql);
 
         if ($result->num_rows > 0) {
-       
+
             while ($row = $result->fetch_assoc()) {
                 $record_path = $row['ContentPath'];
                 $filename = basename($record_path);
@@ -255,7 +260,7 @@ class Content
                 echo '<source src="' . $filename . '" type="audio/mp3">';
                 echo '</audio>';
                 echo '<p>' . $row['Type'] . '</p>';
-				if ($_SESSION['role'] === 'Admin' || $_SESSION['userID']==$row['userID']) {
+                if ($_SESSION['role'] === 'Admin' || $_SESSION['userID'] == $row['userID']) {
                     echo '<a href="delete.php?id=' . $row['ContentID'] . '&type=' . $row['Type'] . '"><i class="fa fa-trash"></i></a>';
                 }
                 echo '</div>';
@@ -284,7 +289,7 @@ class FollowedCategories
 
     public function getContent()
     {
-        $id =$_SESSION['userID'];
+        $id = $_SESSION['userID'];
 
         $conn = $this->db->getConnection();
         $sql = "SELECT * FROM followedcategories where UserID='$id'";
@@ -331,7 +336,7 @@ $followedCategories->getContent();
 <head>
     <meta charset="UTF-8">
     <title>Home Page </title>
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
         /* CSS for the toolbar */
         .toolbar {
@@ -514,7 +519,6 @@ $followedCategories->getContent();
             text-decoration: none;
             color: black;
         }
-      
     </style>
     <script>
         // JavaScript to show/hide the overlay
@@ -539,12 +543,12 @@ $followedCategories->getContent();
             <div class="toolbar__menu-item"><a href="Languge.php">Languge</a></div>
             <div class="toolbar__menu-item"><a href="Mathematics.php">Mathematics</a></div>
             <div class="toolbar__menu-item"> <a href="Technology.php">Technology</a></div>
-            
+
 
         </div>
 
-        <div >
-       
+        <div>
+
             <select id="menu" onchange="window.location.href=this.value;">
                 <option value=""></option>
                 <option value="notification.php">notification</option>
@@ -661,8 +665,8 @@ $followedCategories->getContent();
 
     $content = new Content($database);
     $content->getVideosContent();
-	
-	$content = new Content($database);
+
+    $content = new Content($database);
     $content->getRecordsContent();
     ?>
 
