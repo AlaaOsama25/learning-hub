@@ -41,6 +41,11 @@ class FollowedCategories
         $conn = $this->db->getConnection();
         $result = $conn->query($sql);
 
+        if ($result) {
+          // If the query returns a result, use PHP to output a script tag that sets the display property of the alert element to "block"
+          echo '<script> document.getElementById("alert").style.display = "block"; </script>';
+        }
+
 
         if ($result->num_rows > 0) {
             // Read the contents of the text file
@@ -163,16 +168,21 @@ $database = new DatabaseConnection();
  
   
 
-  
+  <!-- Include a div element with an id that you can use to reference it in JavaScript -->
+<div id="alert" style="display: none;">
+  New data has been added!
+</div>
+
+
   <select id="menu" onchange="window.location.href=this.value;">
     <option value=""></option>
-    <option value="notification.html">notification</option>
-    <option value="profile.html">profile</option>
+    <option value="notification.php">notification</option>
+    <option value="profile.php">profile</option>
     
   </select>
   </div>
 	  
-	  <div class="toolbar__menu-item"><a href="login.html">Log out</a></div>
+	  <div class="toolbar__menu-item"><a href="login.php">Log out</a></div>
     </div>
   </div>
   

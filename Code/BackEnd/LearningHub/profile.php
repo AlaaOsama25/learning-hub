@@ -116,11 +116,11 @@ if (!$conn) {
 </head>
 <body>
   <div class="toolbar">
-   <div class="toolbar__logo"> <a href="Home Page.html">Learning HUB</a></div>
+   <div class="toolbar__logo"> <a href="Home Page.php">Learning HUB</a></div>
     <div class="toolbar__menu">
-      <div class="toolbar__menu-item"><a href="Languge.html">Languge</a></div>
-      <div class="toolbar__menu-item"><a href="Mathematics.html">Mathematics</a></div>
-      <div class="toolbar__menu-item"> <a href="Technology.html">Technology</a></div>
+      <div class="toolbar__menu-item"><a href="Languge.php">Languge</a></div>
+      <div class="toolbar__menu-item"><a href="Mathematics.php">Mathematics</a></div>
+      <div class="toolbar__menu-item"> <a href="Technology.php">Technology</a></div>
 	  </div>
 	  
 	  <div  
@@ -128,8 +128,8 @@ if (!$conn) {
  
 <select id="menu" onchange="window.location.href=this.value;">
     <option value=""></option>
-    <option value="notification.html">notification</option>
-    <option value="profile.html">profile</option>
+    <option value="notification.php">notification</option>
+    <option value="profile.php">profile</option>
     
   </select>
   </div>

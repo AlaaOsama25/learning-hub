@@ -151,7 +151,7 @@ class VideoUploader
         }
     }
 }
-
+$_SESSION['new_content']=false;
 
 class Content
 {
@@ -169,8 +169,12 @@ class Content
         $sql = "SELECT * FROM content WHERE Type = 'Article'";
         $conn = $this->db->getConnection();
         $result = $conn->query($sql);
+        
+    
+
 
         if ($result->num_rows > 0) {
+
             // Read the contents of the text file
             while ($row = $result->fetch_assoc()) {
                 $filepath = $row['ContentPath'];
@@ -280,8 +284,10 @@ class FollowedCategories
 
     public function getContent()
     {
+        $id =$_SESSION['userID'];
+
         $conn = $this->db->getConnection();
-        $sql = "SELECT * FROM followedcategories";
+        $sql = "SELECT * FROM followedcategories where UserID='$id'";
         $result = mysqli_query($conn, $sql);
 
         // Create an array to store the content
@@ -508,6 +514,7 @@ $followedCategories->getContent();
             text-decoration: none;
             color: black;
         }
+      
     </style>
     <script>
         // JavaScript to show/hide the overlay
@@ -532,13 +539,15 @@ $followedCategories->getContent();
             <div class="toolbar__menu-item"><a href="Languge.php">Languge</a></div>
             <div class="toolbar__menu-item"><a href="Mathematics.php">Mathematics</a></div>
             <div class="toolbar__menu-item"> <a href="Technology.php">Technology</a></div>
+            
+
         </div>
 
-        <div <h1>
-            </h1>
+        <div >
+       
             <select id="menu" onchange="window.location.href=this.value;">
                 <option value=""></option>
-                <option value="notification.html">notification</option>
+                <option value="notification.php">notification</option>
                 <option value="profile.php">profile</option>
 
             </select>
