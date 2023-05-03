@@ -668,7 +668,7 @@ $followedCategories->getContent();
 
 <body>
   <div class="toolbar">
-    <div class="toolbar__logo"> <a href="Home Page.php">Learning HUB</a></div>
+    <div class="toolbar__logo"> <a href="HomePage.php">Learning HUB</a></div>
     <div class="toolbar__menu">
       <div class="toolbar__menu-item"><a href="Languge.php">Languge</a></div>
       <div class="toolbar__menu-item"><a href="Mathematics.php">Mathematics</a></div>
