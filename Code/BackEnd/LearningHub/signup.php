@@ -155,7 +155,30 @@ if (isset($_POST['signup'])) {
 	
 
     <script>
-    function onChange() {
+
+	function usernameValidation() {
+    var regex = /^[a-zA-Z]+$/;
+  var inputText = document.getElementById("username").value;
+  if (!regex.test(inputText)) {
+    alert("the data entered are not valid. Please enter only letters");
+    document.getElementById("username").value = "";
+  }
+	
+  }
+
+
+function passwordValidation() {
+  var inputText2 = document.getElementById("password").value;
+  var regex = /^(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>])(?=.*[a-zA-Z]).{5,}$/;
+  if (!regex.test(inputText2)) {
+    alert("Input is invalid. Please enter at least 5 characters, one numeric value, and one special character.");
+    document.getElementById("password").value = "";
+    return false;
+  }
+  return true;
+}
+
+function confirmPasswordValidation() {
         const password = document.querySelector('input[name=password]');
         const confirm = document.querySelector('input[name=confirm_password]');
         if (confirm_password.value === password.value) {
@@ -164,55 +187,7 @@ if (isset($_POST['signup'])) {
             confirm_password.setCustomValidity('Passwords do not match');
         }
     }
-	 function validateTextField(inputText) {
-  var regex = /^[a-zA-Z]+$/;
-  return regex.test(inputText);
-}
-	function validateInput() {
-  var inputText = document.getElementById("username").value;
-  if (!validateTextField(inputText)) {
-    alert("the data entered are not valid. Please enter only letters");
-	document.getElementById("username").value = "";
-	
-  }
-}
 
-function validateInput2() {
-  var inputText2 = document.getElementById("password").value;
-  if (!validateTextField2(inputText2)) {
-    alert("Input is invalid. Please enter at least 5 characters, one numeric value, and one special character.");
-	document.getElementById("password").value = "";
-    return false;
-  }
-  return true;
-}
-
-function validateTextField2(inputText2) {
-  // Check if input has at least 5 characters
-   if (inputText2.length < 5) {
-	  
-    return false;
-  }
-
-  // Check if input has at least one digit
-  if (!/\d/.test(inputText2)) {
-	 
-    return false;
-  }
-
-  // Check if input has at least one special character
-  if (!/[!@#$%^&*(),.?":{}|<>]/.test(inputText2)) {
-	  
-    return false;
-  }
-
-  // Input is valid
-  return true;
-}
-  function clearTextField() {
-      document.getElementById("username").value = "";
-	  	  
-    }
     </script>
 </head>
 
@@ -225,17 +200,17 @@ function validateTextField2(inputText2) {
         <div class="right-side">
             <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post">
                 <label for="username">Username:</label>
-                <input type="text" id="username" name="username" onblur="validateInput()" required>
+                <input type="text" id="username" name="username" onblur="usernameValidation()" required>
 
                 <label for="email">Email:</label>
                 <input type="email" id="email" name="email" required>
 
                 <label for="password">Password:</label>
-                <input type="password" id="password" name="password" onblur="validateInput2()"  required>
+                <input type="password" id="password" name="password" onblur="passwordValidation()"  required>
 
                 <label for="confirm_password">Confirm Password:</label>
-                <input type="password" id="confirm_password" name="confirm_password" onChange="onChange()" required>
-                <input type="submit" value="Register" name="signup"  onChange="onChange()">
+                <input type="password" id="confirm_password" name="confirm_password" onChange="confirmPasswordValidation()" required>
+                <input type="submit" value="Register" name="signup"  onChange="confirmPasswordValidation()">
             </form>
         </div>
     </div>
