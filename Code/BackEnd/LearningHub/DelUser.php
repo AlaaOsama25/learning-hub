@@ -23,13 +23,20 @@ class DeleteUser {
 
   public function deleteUser($username, $email) {
       $conn = $this->db->getConnection();
+	  
+	   $stmt =$conn->prepare("SELECT * FROM users WHERE username = ? AND email = ? ");
+    $stmt->bind_param("ss", $username, $email);
+    $stmt->execute();
+    $result = $stmt->get_result();
+if ($result->num_rows > 0) {
       $stmt = $conn->prepare("DELETE  FROM users WHERE username = ? AND email = ? ");
       $stmt->bind_param("ss", $username, $email);
-      $execval = $stmt->execute();
-      if (!$execval) {
-          echo "Error: " . $stmt->error;
-      } else {
-          echo "User deleted successfully...";
+$execval = $stmt->execute();
+ echo "User deleted successfully...";
+}
+     
+      else {
+          echo "User does not exist...";
       }
   }
 }
