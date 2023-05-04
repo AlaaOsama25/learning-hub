@@ -499,8 +499,8 @@ $followedCategories->getContent();
     .container {
       display: flex;
       flex-wrap: wrap;
-      align-items: left;
-      justify-content: left;
+      align-items: center;
+      justify-content: center;
       border: 1px solid #ccc;
       padding: 10px;
       margin-bottom: 10px;

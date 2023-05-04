@@ -437,7 +437,7 @@ $followedCategories->getContent();
             display: flex;
             flex-wrap: wrap;
             align-items: center;
-            justify-content: flex-start;
+            justify-content: center;
             border: 1px solid #ccc;
             padding: 10px;
             margin-bottom: 10px;
