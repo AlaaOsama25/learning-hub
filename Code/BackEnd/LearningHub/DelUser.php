@@ -5,7 +5,7 @@ class DatabaseConnection {
 
 	public function __construct() {
 		session_start();
-		require_once 'connect.php';
+		require_once 'Database Connection.php';
 		$this->db = new connect();
 	}
 

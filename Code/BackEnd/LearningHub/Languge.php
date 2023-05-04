@@ -10,7 +10,7 @@ class DatabaseConnection
     if (empty(session_id()) && !headers_sent()) {
       session_start();
     }
-    require_once 'connect.php';
+    require_once 'Database Connection.php';
     $this->db = new connect();
   }
 
