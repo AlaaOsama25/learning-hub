@@ -230,9 +230,12 @@ class Content
   {
 
     // Retrieve file path from the database
-    $sql = "SELECT * FROM content WHERE Type = 'Article' AND CategoryName = 'Mathematics' ";
-    $conn = $this->db->getConnection();
-    $result = $conn->query($sql);
+  $sql = "SELECT c.*, u.username 
+        FROM content c 
+        JOIN users u ON c.userID = u.userID 
+        WHERE c.Type = 'Article' AND CategoryName = 'Mathematics'";   
+        $conn = $this->db->getConnection();
+        $result = $conn->query($sql);
 
 
 
@@ -247,8 +250,9 @@ class Content
         $file_contents = file_get_contents($filepath);
         echo '<div class="container">';
         echo '<div class="Publicher">';
-        echo '<h1>' . $row['CategoryName'] . '</h1>';
-        echo '<h3>' . $file_contents . '</h3>';
+        echo '<h1>' . $row['username'] . '</h1>';
+        echo '<h3>' . $row['CategoryName'] . '</h3>';
+        echo '<p>' . $file_contents . '</p>';
         echo '<p>' . $row['Type'] . '</p>';
 
         if ($_SESSION['role'] === 'Admin' || $_SESSION['userID'] == $row['userID']) {
@@ -267,7 +271,10 @@ class Content
     //$video_path2 = 'VideosImported/20200806_173554.mp4';
 
     // Retrieve file path from the database
-    $sql = "SELECT * FROM content WHERE Type = 'Video' AND CategoryName = 'Mathematics'";
+    $sql = "SELECT c.*, u.username 
+    FROM content c 
+    JOIN users u ON c.userID = u.userID 
+    WHERE c.Type = 'Video'AND CategoryName = 'Mathematics'";    
     $conn = $this->db->getConnection();
     $result = $conn->query($sql);
 
@@ -280,7 +287,8 @@ class Content
         $filename = substr($filename, 0, $position) . '/' . substr($filename, $position);
         echo '<div class="container">';
         echo '<div class="Publicher">';
-        echo '<h1>' . $row['CategoryName'] . '</h1>';
+        echo '<h1>' . $row['username'] . '</h1>';
+        echo '<h3>' . $row['CategoryName'] . '</h3>';        
         echo '<video width="640" height="480" controls>';
         echo '<source src="' . $filename . '" type="video/mp4">';
         echo 'Your browser does not support the video tag.';
@@ -301,7 +309,10 @@ class Content
     //$video_path2 = 'VideosImported/20200806_173554.mp4';
 
     // Retrieve file path from the database
-    $sql = "SELECT * FROM content WHERE Type = 'Record' AND CategoryName = 'Mathematics'";
+    $sql = "SELECT c.*, u.username 
+    FROM content c 
+    JOIN users u ON c.userID = u.userID 
+    WHERE c.Type = 'Record'AND CategoryName = 'Mathematics'";    
     $conn = $this->db->getConnection();
     $result = $conn->query($sql);
 
@@ -314,7 +325,8 @@ class Content
         $filename = substr($filename, 0, $position) . '/' . substr($filename, $position);
         echo '<div class="container">';
         echo '<div class="Publicher">';
-        echo '<h1>' . $row['CategoryName'] . '</h1>';
+        echo '<h1>' . $row['username'] . '</h1>';
+        echo '<h3>' . $row['CategoryName'] . '</h3>';        
         echo '<audio controls>';
         echo '<source src="' . $filename . '" type="audio/mp3">';
         echo '</audio>';
@@ -649,6 +661,28 @@ $followedCategories->getContent();
     #unfollow-button.followed::after {
       content: "";
     }
+
+    
+    .Publicher h1, .Publicher h3  .Publicher video {
+            display: inline-block;
+            margin-right: 5px;
+            margin-bottom: 2px;
+
+        }
+
+        
+
+        .Publicher h3 {
+            color: grey;
+        }
+    
+        .Publicher p {
+        margin-top: 1px;
+        }
+        
+
+        
+
   </style>
   <script>
     // JavaScript to show/hide the overlay
