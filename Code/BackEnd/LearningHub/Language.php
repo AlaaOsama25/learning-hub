@@ -724,7 +724,7 @@ $followedCategories->getContent();
         <div id="popup1" class="popup">
           <p>puplisher
             &nbsp; &nbsp;&nbsp;
-            <select id="menu" onchange="">
+            <select id="menu1" onchange="">
               <option value="language" selected>language</option>
 
 
@@ -745,12 +745,14 @@ $followedCategories->getContent();
         <div id="popup2" class="popup">
           <p></p>
           <span class="close-button" onclick="document.getElementById('popup2').style.display = 'none'">&times;</span>
-          <form class="record" action="upload.php" method="POST" enctype="multipart/form-data">
-            <label for="voice">Choose record:</label>
-            <input type="file" id="voice" name="voice" accept="audio/*">
-            <br><br>
-            <input type="submit" value="Upload">
-          </form>
+          <form class="record" action="<?php echo $_SERVER['PHP_SELF'] ?>" method="POST"
+                        enctype="multipart/form-data">           
+                        <label for="file">Choose video or record:</label>
+                        <input type="file" id="file" name="file">
+                        <br><br>
+                        <input type="hidden" name="hidden_category" id="hidden_category" value="">
+                        <input type="submit" value="Upload" name="uploadButton">
+                    </form>
         </div>
         <div id="popup3" class="popup">
           <p></p>
