@@ -122,7 +122,7 @@ if (!$conn) {
   <div class="toolbar">
     <div class="toolbar__logo"> <a href="HomePage.php">Learning HUB</a></div>
     <div class="toolbar__menu">
-      <div class="toolbar__menu-item"><a href="Languge.php">Languge</a></div>
+      <div class="toolbar__menu-item"><a href="Language.php">Language</a></div>
       <div class="toolbar__menu-item"><a href="Mathematics.php">Mathematics</a></div>
       <div class="toolbar__menu-item"> <a href="Technology.php">Technology</a></div>
     </div>
@@ -137,7 +137,7 @@ if (!$conn) {
 
       </select>
     </div>
-    <div class="toolbar__menu-item"><a href="login.html">Log out</a></div>
+    <div class="toolbar__menu-item"><a href="login.php">Log out</a></div>
   </div>
   </div>
   <div class="profile">

@@ -33,6 +33,10 @@ $stmt->bind_param("i", $id);
 if ($stmt->execute()) {
     // Redirect to homepage or show a success message
     header('Location: HomePage.php');
+    if (isset($_GET['path'])) {
+        $path = $_GET['path'];
+        unlink($path);
+    }
     exit();
 } else {
     // Redirect to homepage or show an error message

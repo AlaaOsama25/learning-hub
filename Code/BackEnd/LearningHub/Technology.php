@@ -252,7 +252,7 @@ class Content
         echo '<p>' . $row['Type'] . '</p>';
 
         if ($_SESSION['role'] === 'Admin' || $_SESSION['userID'] == $row['userID']) {
-          echo '<a href="delete.php?id=' . $row['ContentID'] . '&type=' . $row['Type'] . '"><i class="fa fa-trash"></i></a>';
+          echo '<a href="delete.php?id=' . $row['ContentID'] . '&type=' . $row['Type'] . '&path=' . $row['ContentPath'] . '"><i class="fa fa-trash"></i></a>';
         }
         echo '</div>';
         echo '</div>';
@@ -281,13 +281,13 @@ class Content
         echo '<div class="container">';
         echo '<div class="Publicher">';
         echo '<h1>' . $row['CategoryName'] . '</h1>';
-        echo '<video width="320" height="240" controls>';
+        echo '<video width="640" height="480" controls>';
         echo '<source src="' . $filename . '" type="video/mp4">';
         echo 'Your browser does not support the video tag.';
         echo '</video>';
         echo '<p>' . $row['Type'] . '</p>';
         if ($_SESSION['role'] === 'Admin' || $_SESSION['userID'] == $row['userID']) {
-          echo '<a href="delete.php?id=' . $row['ContentID'] . '&type=' . $row['Type'] . '"><i class="fa fa-trash"></i></a>';
+          echo '<a href="delete.php?id=' . $row['ContentID'] . '&type=' . $row['Type'] .  '&path=' . $filename .'"><i class="fa fa-trash"></i></a>';
         }
         echo '</div>';
         echo '</div>';
@@ -320,7 +320,7 @@ class Content
         echo '</audio>';
         echo '<p>' . $row['Type'] . '</p>';
         if ($_SESSION['role'] === 'Admin' || $_SESSION['userID'] == $row['userID']) {
-          echo '<a href="delete.php?id=' . $row['ContentID'] . '&type=' . $row['Type'] . '"><i class="fa fa-trash"></i></a>';
+          echo '<a href="delete.php?id=' . $row['ContentID'] . '&type=' . $row['Type'] . '&path=' . $filename . '"><i class="fa fa-trash"></i></a>';
         }
         echo '</div>';
         echo '</div>';
@@ -499,8 +499,8 @@ $followedCategories->getContent();
     .container {
       display: flex;
       flex-wrap: wrap;
-      align-items: center;
-      justify-content: center;
+      align-items: Left;
+      justify-content: Left;
       border: 1px solid #ccc;
       padding: 10px;
       margin-bottom: 10px;
@@ -670,7 +670,7 @@ $followedCategories->getContent();
   <div class="toolbar">
     <div class="toolbar__logo"> <a href="HomePage.php">Learning HUB</a></div>
     <div class="toolbar__menu">
-      <div class="toolbar__menu-item"><a href="Languge.php">Languge</a></div>
+      <div class="toolbar__menu-item"><a href="Language.php">Language</a></div>
       <div class="toolbar__menu-item"><a href="Mathematics.php">Mathematics</a></div>
       <div class="toolbar__menu-item"> <a href="Technology.php">Technology</a></div>
     </div>
@@ -680,7 +680,7 @@ $followedCategories->getContent();
 
       <select id="menu" onchange="window.location.href=this.value;">
         <option value=""></option>
-        <option value="notification.html">notification</option>
+        <option value="notification.php">notification</option>
         <option value="profile.php">profile</option>
 
       </select>
@@ -766,9 +766,12 @@ $followedCategories->getContent();
           <p></p>
           <span class="close-button" onclick="document.getElementById('popup3').style.display = 'none'">&times;</span>
           <label for="textarea">Enter your message:</label><br><br>
-          <textarea id="textarea" name="textarea" rows="4" cols="50"></textarea><br>
-          <input type="submit" value="add" onclick="window.location.href='HomePage.php'"> </button>
-        </div>
+          <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post">
+                        <textarea id="textarea" name="textarea" rows="4" cols="50"></textarea><br>
+                        <input type="hidden" name="hidden_category2" id="hidden_category2" value="">
+                        <input type="submit" value="add" name="addButton">
+                </div>
+                </form>
 
         <script>
           function showPopup() {
@@ -800,19 +803,21 @@ $followedCategories->getContent();
       <h1>Hasnaa Ahmed </h1>
       <h3> Technology </h3>
 
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed auctor tristique lorem, vel sagittis elit. Nulla
-        facilisi. Fusce sit amet dolor at augue ullamcorper auctor. Praesent varius luctus ex, ac rutrum turpis suscipit
-        sit amet. Sed vel tellus eu massa molestie malesuada. Aenean vehicula, lorem sit amet pharetra aliquam, velit
-        velit elementum lectus, ut tempus turpis sem vel enim. Praesent vel magna quam. Aliquam erat volutpat. Mauris
-        lobortis arcu vel pellentesque pulvinar. Ut sed diam ac sapien feugiat consectetur.</p>
+      <p>Technology has witnessed impressive evolution in the past few decades, which 
+        has in turn transformed our lives and helped us evolve with it. Right from roadways, 
+        railways, and aircraft for seamless travel to making communication effortless from any 
+        part of the world, technology has contributed more than anything to help mankind live a 
+        life of luxury and convenience. It is also because of technology that we know our world 
+        and outer space better. Every field owes its advancement to technology, and this clearly
+        indicates the importance of technology in every aspect of our lives. </p>
     </div>
   </div>
-  <div class="container">
+  <!--  <div class="container">
     <div class="Publicher ">
       <h1>Nada Mandour </h1>
-      <h3> technology </h3>
+      <h3> Technology </h3>
       <img class="images" src="technology.jpg" alt="technology Image">
-    </div>
+    </div>-->
   </div>
 
   <div class="container">
@@ -820,11 +825,10 @@ $followedCategories->getContent();
       <h1>Hasnaa Ahmed </h1>
       <h3> Technology </h3>
 
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed auctor tristique lorem, vel sagittis elit. Nulla
-        facilisi. Fusce sit amet dolor at augue ullamcorper auctor. Praesent varius luctus ex, ac rutrum turpis suscipit
-        sit amet. Sed vel tellus eu massa molestie malesuada. Aenean vehicula, lorem sit amet pharetra aliquam, velit
-        velit elementum lectus, ut tempus turpis sem vel enim. Praesent vel magna quam. Aliquam erat volutpat. Mauris
-        lobortis arcu vel pellentesque pulvinar. Ut sed diam ac sapien feugiat consectetur.</p>
+      <p>ChatGPT is an innovative artificial intelligence (AI) language model developed by OpenAI, 
+        one of the leading AI research organizations in the world. It is an advanced deep learning system
+        designed to understand, analyze and generate human-like language, making it one of the most powerful 
+        conversational AI tools available today.</p>
     </div>
   </div>
   <?php
