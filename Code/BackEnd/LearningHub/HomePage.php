@@ -175,9 +175,6 @@ class Content
         $conn = $this->db->getConnection();
         $result = $conn->query($sql);
 
-
-
-
         if ($result->num_rows > 0) {
 
             // Read the contents of the text file
@@ -193,7 +190,7 @@ class Content
                 echo '<p>' . $row['Type'] . '</p>';
 
                 if ($_SESSION['role'] === 'Admin' || $_SESSION['userID'] == $row['userID']) {
-                    echo '<a href="delete.php?id=' . $row['ContentID'] . '&type=' . $row['Type'] . '"><i class="fa fa-trash"></i></a>';
+                    echo '<a href="delete.php?id=' . $row['ContentID'] . '&type=' . $row['Type'] .'&path=' . $row['ContentPath'] . '"><i class="fa fa-trash"></i></a>';
                 }
                 echo '</div>';
                 echo '</div>';
@@ -222,13 +219,13 @@ class Content
                 echo '<div class="container">';
                 echo '<div class="Publicher">';
                 echo '<h1>' . $row['CategoryName'] . '</h1>';
-                echo '<video width="320" height="240" controls>';
+                echo '<video width="640" height="480" controls>';
                 echo '<source src="' . $filename . '" type="video/mp4">';
                 echo 'Your browser does not support the video tag.';
                 echo '</video>';
                 echo '<p>' . $row['Type'] . '</p>';
                 if ($_SESSION['role'] === 'Admin' || $_SESSION['userID'] == $row['userID']) {
-                    echo '<a href="delete.php?id=' . $row['ContentID'] . '&type=' . $row['Type'] . '"><i class="fa fa-trash"></i></a>';
+                    echo '<a href="delete.php?id=' . $row['ContentID'] . '&type=' . $row['Type'] . '&path=' . $filename . '"><i class="fa fa-trash"></i></a>';
                 }
                 echo '</div>';
                 echo '</div>';
@@ -261,7 +258,7 @@ class Content
                 echo '</audio>';
                 echo '<p>' . $row['Type'] . '</p>';
                 if ($_SESSION['role'] === 'Admin' || $_SESSION['userID'] == $row['userID']) {
-                    echo '<a href="delete.php?id=' . $row['ContentID'] . '&type=' . $row['Type'] . '"><i class="fa fa-trash"></i></a>';
+                    echo '<a href="delete.php?id=' . $row['ContentID'] . '&type=' . $row['Type'] .'&path=' . $filename . '"><i class="fa fa-trash"></i></a>';
                 }
                 echo '</div>';
                 echo '</div>';
@@ -270,10 +267,6 @@ class Content
             echo "";
         }
     }
-
-
-
-
 }
 
 
@@ -436,8 +429,8 @@ $followedCategories->getContent();
         .container {
             display: flex;
             flex-wrap: wrap;
-            align-items: center;
-            justify-content: center;
+            align-items: Left;
+            justify-content: Left;
             border: 1px solid #ccc;
             padding: 10px;
             margin-bottom: 10px;
@@ -519,6 +512,21 @@ $followedCategories->getContent();
             text-decoration: none;
             color: black;
         }
+/*
+        .Publicher h1, .Publicher h3 {
+            display: inline-block;
+            margin-right: 30px;
+
+        }
+
+        .Publicher h3 {
+            color: grey;
+        }
+    
+        .Publicher p {
+        margin-top: 1px;
+        }
+*/
     </style>
     <script>
         // JavaScript to show/hide the overlay
@@ -540,7 +548,7 @@ $followedCategories->getContent();
     <div class="toolbar">
         <div class="toolbar__logo"> <a href="HomePage.php">Learning HUB</a></div>
         <div class="toolbar__menu">
-            <div class="toolbar__menu-item"><a href="Languge.php">Languge</a></div>
+            <div class="toolbar__menu-item"><a href="Language.php">Language</a></div>
             <div class="toolbar__menu-item"><a href="Mathematics.php">Mathematics</a></div>
             <div class="toolbar__menu-item"> <a href="Technology.php">Technology</a></div>
 
@@ -641,22 +649,22 @@ $followedCategories->getContent();
 
         <div class="Publicher ">
             <h1>Hasnaa Ahmed </h1>
-            <h3> Languge </h3>
+            <h3> Language </h3>
 
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed auctor tristique lorem, vel sagittis elit.
-                Nulla facilisi. Fusce sit amet dolor at augue ullamcorper auctor. Praesent varius luctus ex, ac rutrum
-                turpis suscipit sit amet. Sed vel tellus eu massa molestie malesuada. Aenean vehicula, lorem sit amet
-                pharetra aliquam, velit velit elementum lectus, ut tempus turpis sem vel enim. Praesent vel magna quam.
-                Aliquam erat volutpat. Mauris lobortis arcu vel pellentesque pulvinar. Ut sed diam ac sapien feugiat
-                consectetur.</p>
+            <p>A language is a universal way for a community to communicate with each other. 
+                It is developed in due course of time and changes due to certain popular trends.
+                The development of language explains why it is important for communication.
+                To understand the importance of language, we need to understand what it is first. 
+                We need to find what comprises a language and how it evolves as a unique medium of 
+                communication among a particular community or a population.</p>
         </div>
     </div>
-    <div class="container">
+    <!--  <div class="container">
         <div class="Publicher ">
             <h1>Nada Mandour </h1>
-            <h3> technology </h3>
+            <h3> Technology </h3>
             <img class="images" src="technology.jpg" alt="technology Image">
-        </div>
+        </div>-->
     </div>
 
     <?php

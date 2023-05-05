@@ -252,7 +252,7 @@ class Content
         echo '<p>' . $row['Type'] . '</p>';
 
         if ($_SESSION['role'] === 'Admin' || $_SESSION['userID'] == $row['userID']) {
-          echo '<a href="delete.php?id=' . $row['ContentID'] . '&type=' . $row['Type'] . '"><i class="fa fa-trash"></i></a>';
+          echo '<a href="delete.php?id=' . $row['ContentID'] . '&type=' . $row['Type'] .'&path=' . $row['ContentPath'] .  '"><i class="fa fa-trash"></i></a>';
         }
         echo '</div>';
         echo '</div>';
@@ -281,13 +281,13 @@ class Content
         echo '<div class="container">';
         echo '<div class="Publicher">';
         echo '<h1>' . $row['CategoryName'] . '</h1>';
-        echo '<video width="320" height="240" controls>';
+        echo '<video width="640" height="480" controls>';
         echo '<source src="' . $filename . '" type="video/mp4">';
         echo 'Your browser does not support the video tag.';
         echo '</video>';
         echo '<p>' . $row['Type'] . '</p>';
         if ($_SESSION['role'] === 'Admin' || $_SESSION['userID'] == $row['userID']) {
-          echo '<a href="delete.php?id=' . $row['ContentID'] . '&type=' . $row['Type'] . '"><i class="fa fa-trash"></i></a>';
+          echo '<a href="delete.php?id=' . $row['ContentID'] . '&type=' . $row['Type'] . '&path=' . $filename . '"><i class="fa fa-trash"></i></a>';
         }
         echo '</div>';
         echo '</div>';
@@ -320,7 +320,7 @@ class Content
         echo '</audio>';
         echo '<p>' . $row['Type'] . '</p>';
         if ($_SESSION['role'] === 'Admin' || $_SESSION['userID'] == $row['userID']) {
-          echo '<a href="delete.php?id=' . $row['ContentID'] . '&type=' . $row['Type'] . '"><i class="fa fa-trash"></i></a>';
+          echo '<a href="delete.php?id=' . $row['ContentID'] . '&type=' . $row['Type'] .  '&path=' . $filename .'"><i class="fa fa-trash"></i></a>';
         }
         echo '</div>';
         echo '</div>';
@@ -499,8 +499,8 @@ $followedCategories->getContent();
     .container {
       display: flex;
       flex-wrap: wrap;
-      align-items: center;
-      justify-content: center;
+      align-items: Left;
+      justify-content: Left;
       border: 1px solid #ccc;
       padding: 10px;
       margin-bottom: 10px;
@@ -508,7 +508,7 @@ $followedCategories->getContent();
     }
 
     .images {
-      max-width: 100%;
+      max-width: 70%;
       height: 5 px;
       margin-bottom: 20px;
       align: center;
@@ -668,7 +668,7 @@ $followedCategories->getContent();
   <div class="toolbar">
     <div class="toolbar__logo"> <a href="HomePage.php">Learning HUB</a></div>
     <div class="toolbar__menu">
-      <div class="toolbar__menu-item"><a href="Languge.php">Languge</a></div>
+      <div class="toolbar__menu-item"><a href="Language.php">Language</a></div>
       <div class="toolbar__menu-item"><a href="Mathematics.php">Mathematics</a></div>
       <div class="toolbar__menu-item"> <a href="Technology.php">Technology</a></div>
     </div>
@@ -678,12 +678,12 @@ $followedCategories->getContent();
 
       <select id="menu" onchange="window.location.href=this.value;">
         <option value=""></option>
-        <option value="notification.html">notification</option>
+        <option value="notification.php">notification</option>
         <option value="profile.php">profile</option>
 
       </select>
     </div>
-    <div class="toolbar__menu-item"><a href="login.html">Log out</a></div>
+    <div class="toolbar__menu-item"><a href="login.php">Log out</a></div>
   </div>
   </div>
   <div class="container">
@@ -765,9 +765,12 @@ $followedCategories->getContent();
           <p></p>
           <span class="close-button" onclick="document.getElementById('popup3').style.display = 'none'">&times;</span>
           <label for="textarea">Enter your message:</label><br><br>
-          <textarea id="textarea" name="textarea" rows="4" cols="50"></textarea><br>
-          <input type="submit" value="add" onclick="window.location.href='Home Page.html'"> </button>
-        </div>
+          <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post">
+                        <textarea id="textarea" name="textarea" rows="4" cols="50"></textarea><br>
+                        <input type="hidden" name="hidden_category2" id="hidden_category2" value="">
+                        <input type="submit" value="add" name="addButton">
+                </div>
+                </form>
 
         <script>
           function showPopup() {
@@ -800,31 +803,26 @@ $followedCategories->getContent();
       <h1>Hasnaa Ahmed </h1>
       <h3> Mathematics </h3>
 
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed auctor tristique lorem, vel sagittis elit. Nulla
-        facilisi. Fusce sit amet dolor at augue ullamcorper auctor. Praesent varius luctus ex, ac rutrum turpis suscipit
-        sit amet. Sed vel tellus eu massa molestie malesuada. Aenean vehicula, lorem sit amet pharetra aliquam, velit
-        velit elementum lectus, ut tempus turpis sem vel enim. Praesent vel magna quam. Aliquam erat volutpat. Mauris
-        lobortis arcu vel pellentesque pulvinar. Ut sed diam ac sapien feugiat consectetur.</p>
+      <p>Mathematics is an area of knowledge that includes the topics of numbers, 
+        formulas and related structures, shapes and the spaces in which they are contained, 
+        and quantities and their changes. Mathematics is essential in the natural sciences,
+        engineering, medicine, finance, computer science and the social sciences. </p>
     </div>
   </div>
-  <div class="container">
+   <!-- <div class="container">
     <div class="Publicher ">
       <h1>Nada Mandour </h1>
       <h3> Mathematics </h3>
-      <img class="images" src="technology.jpg" alt="technology Image">
-    </div>
+      <img class="images" src="Math.jpg" alt="technology Image">
+    </div>-->
   </div>
 
   <div class="container">
     <div class="Publicher ">
-      <h1>Hasnaa Ahmed </h1>
+      <h1>Nada Mandour</h1>
       <h3> Mathematics </h3>
 
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed auctor tristique lorem, vel sagittis elit. Nulla
-        facilisi. Fusce sit amet dolor at augue ullamcorper auctor. Praesent varius luctus ex, ac rutrum turpis suscipit
-        sit amet. Sed vel tellus eu massa molestie malesuada. Aenean vehicula, lorem sit amet pharetra aliquam, velit
-        velit elementum lectus, ut tempus turpis sem vel enim. Praesent vel magna quam. Aliquam erat volutpat. Mauris
-        lobortis arcu vel pellentesque pulvinar. Ut sed diam ac sapien feugiat consectetur.</p>
+      <p> The word “hundred” comes from the old Norse term, “hundrath”, which actually means 120 and not 100.</p>
     </div>
   </div>
   <?php
