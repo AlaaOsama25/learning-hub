@@ -230,9 +230,12 @@ class Content
   {
 
     // Retrieve file path from the database
-    $sql = "SELECT * FROM content WHERE Type = 'Article' AND CategoryName = 'Mathematics' ";
-    $conn = $this->db->getConnection();
-    $result = $conn->query($sql);
+  $sql = "SELECT c.*, u.username 
+        FROM content c 
+        JOIN users u ON c.userID = u.userID 
+        WHERE c.Type = 'Article' AND CategoryName = 'Mathematics'";   
+        $conn = $this->db->getConnection();
+        $result = $conn->query($sql);
 
 
 
@@ -247,8 +250,9 @@ class Content
         $file_contents = file_get_contents($filepath);
         echo '<div class="container">';
         echo '<div class="Publicher">';
-        echo '<h1>' . $row['CategoryName'] . '</h1>';
-        echo '<h3>' . $file_contents . '</h3>';
+        echo '<h1>' . $row['username'] . '</h1>';
+        echo '<h3>' . $row['CategoryName'] . '</h3>';
+        echo '<p>' . $file_contents . '</p>';
         echo '<p>' . $row['Type'] . '</p>';
 
         if ($_SESSION['role'] === 'Admin' || $_SESSION['userID'] == $row['userID']) {
@@ -267,7 +271,10 @@ class Content
     //$video_path2 = 'VideosImported/20200806_173554.mp4';
 
     // Retrieve file path from the database
-    $sql = "SELECT * FROM content WHERE Type = 'Video' AND CategoryName = 'Mathematics'";
+    $sql = "SELECT c.*, u.username 
+    FROM content c 
+    JOIN users u ON c.userID = u.userID 
+    WHERE c.Type = 'Video'AND CategoryName = 'Mathematics'";    
     $conn = $this->db->getConnection();
     $result = $conn->query($sql);
 
@@ -280,7 +287,8 @@ class Content
         $filename = substr($filename, 0, $position) . '/' . substr($filename, $position);
         echo '<div class="container">';
         echo '<div class="Publicher">';
-        echo '<h1>' . $row['CategoryName'] . '</h1>';
+        echo '<h1>' . $row['username'] . '</h1>';
+        echo '<h3>' . $row['CategoryName'] . '</h3>';        
         echo '<video width="640" height="480" controls>';
         echo '<source src="' . $filename . '" type="video/mp4">';
         echo 'Your browser does not support the video tag.';
@@ -301,7 +309,10 @@ class Content
     //$video_path2 = 'VideosImported/20200806_173554.mp4';
 
     // Retrieve file path from the database
-    $sql = "SELECT * FROM content WHERE Type = 'Record' AND CategoryName = 'Mathematics'";
+    $sql = "SELECT c.*, u.username 
+    FROM content c 
+    JOIN users u ON c.userID = u.userID 
+    WHERE c.Type = 'Record'AND CategoryName = 'Mathematics'";    
     $conn = $this->db->getConnection();
     $result = $conn->query($sql);
 
@@ -314,7 +325,8 @@ class Content
         $filename = substr($filename, 0, $position) . '/' . substr($filename, $position);
         echo '<div class="container">';
         echo '<div class="Publicher">';
-        echo '<h1>' . $row['CategoryName'] . '</h1>';
+        echo '<h1>' . $row['username'] . '</h1>';
+        echo '<h3>' . $row['CategoryName'] . '</h3>';        
         echo '<audio controls>';
         echo '<source src="' . $filename . '" type="audio/mp3">';
         echo '</audio>';
@@ -400,6 +412,7 @@ $followedCategories->getContent();
 <head>
   <meta charset="UTF-8">
   <title>Mathematics </title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <style>
     /* CSS for the toolbar */
     .toolbar {
@@ -648,6 +661,28 @@ $followedCategories->getContent();
     #unfollow-button.followed::after {
       content: "";
     }
+
+    
+    .Publicher h1, .Publicher h3  .Publicher video {
+            display: inline-block;
+            margin-right: 5px;
+            margin-bottom: 2px;
+
+        }
+
+        
+
+        .Publicher h3 {
+            color: grey;
+        }
+    
+        .Publicher p {
+        margin-top: 1px;
+        }
+        
+
+        
+
   </style>
   <script>
     // JavaScript to show/hide the overlay
@@ -733,7 +768,7 @@ $followedCategories->getContent();
         <div id="popup1" class="popup">
           <p>puplisher
             &nbsp; &nbsp;&nbsp;
-            <select id="menu" onchange="">
+            <select id="menu1" onchange="">
               <option value="Mathematics" selected>Mathematics</option>
 
 
@@ -754,13 +789,16 @@ $followedCategories->getContent();
         <div id="popup2" class="popup">
           <p></p>
           <span class="close-button" onclick="document.getElementById('popup2').style.display = 'none'">&times;</span>
-          <form class="record" action="upload.php" method="POST" enctype="multipart/form-data">
-            <label for="voice">Choose record:</label>
-            <input type="file" id="voice" name="voice" accept="audio/*">
-            <br><br>
-            <input type="submit" value="Upload">
-          </form>
+          <form class="record" action="<?php echo $_SERVER['PHP_SELF'] ?>" method="POST"
+                        enctype="multipart/form-data">           
+                        <label for="file">Choose video or record:</label>
+                        <input type="file" id="file" name="file">
+                        <br><br>
+                        <input type="hidden" name="hidden_category" id="hidden_category" value="">
+                        <input type="submit" value="Upload" name="uploadButton">
+                    </form>
         </div>
+
         <div id="popup3" class="popup">
           <p></p>
           <span class="close-button" onclick="document.getElementById('popup3').style.display = 'none'">&times;</span>
