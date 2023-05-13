@@ -660,9 +660,13 @@ $followedCategories->getContent();
                     }
 
                     function showPopup3() {
-                        document.getElementById("popup3").style.display = "block";
                         var category = document.getElementById("menu1").value;
-                        document.getElementById("hidden_category2").value = category;
+    if (category === "") {
+        alert("You must choose a category.");
+    } else {
+        document.getElementById("popup3").style.display = "block";
+        document.getElementById("hidden_category2").value = category;
+    }
                     }
                 </script>
             </fieldset>
