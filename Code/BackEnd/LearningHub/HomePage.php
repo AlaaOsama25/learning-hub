@@ -654,6 +654,7 @@ $followedCategories->getContent();
                     }
 
                     function showPopup2() {
+                        document.getElementById("popup2").style.display = "block";
                         var category = document.getElementById("menu1").value;
     if (category === "") {
         alert("You must choose a category.");
@@ -661,6 +662,7 @@ $followedCategories->getContent();
         document.getElementById("popup2").style.display = "block";
         document.getElementById("hidden_category").value = category;
                     }}
+
 
                     function showPopup3() {
                         var category = document.getElementById("menu1").value;
