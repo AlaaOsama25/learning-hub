@@ -660,7 +660,7 @@ $followedCategories->getContent();
     } else {
         document.getElementById("popup2").style.display = "block";
         document.getElementById("hidden_category").value = category;
-                    }
+                    }}
 
                     function showPopup3() {
                         var category = document.getElementById("menu1").value;
