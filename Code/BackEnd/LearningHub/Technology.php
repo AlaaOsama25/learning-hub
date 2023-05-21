@@ -172,10 +172,7 @@ class VideoUploader
         if ($_FILES["file"]["error"] > 0) {
           echo "Return Code: " . $_FILES["file"]["error"] . "<br />";
         } else {
-          echo "Upload: " . $_FILES["file"]["name"] . "<br />";
-          echo "Type: " . $_FILES["file"]["type"] . "<br />";
-          echo "Size: " . ($_FILES["file"]["size"] / 1024) . " Kb<br />";
-          echo "Temp file: " . $_FILES["file"]["tmp_name"] . "<br />";
+          
 
           if (file_exists("VideosImported/" . $_FILES["file"]["name"])) {
             echo $_FILES["file"]["name"] . " already exists. ";
@@ -184,7 +181,7 @@ class VideoUploader
               $_FILES["file"]["tmp_name"],
               "VideosImported/" . $_FILES["file"]["name"]
             );
-            echo "Stored in: " . "VideosImported/" . $_FILES["file"]["name"];
+          
             $path = 'C:\xampp\htdocs\VideosImported' . $_FILES["file"]["name"];
             if ($extension == "mp3") {
               $type = "Record";
