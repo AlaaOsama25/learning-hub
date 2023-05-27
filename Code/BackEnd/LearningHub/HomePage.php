@@ -88,7 +88,7 @@ class AddingArticle
 
             } else {
                 echo "Error: Content is empty";
-                exit;
+                return;
             }
 
         }
